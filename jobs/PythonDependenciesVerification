@@ -1,0 +1,22 @@
+pipelineJob("PythonDependenciesVerification_INPUT.PROJECT_NAME") {
+    parameters {
+        stringParam("BRANCH", "develop", "Execution branch")
+    }
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("INPUT.PROJECT_URL")
+                    }
+                    branch("*/develop")
+                }
+            }
+            scriptPath("tools/jenkins/PythonDependenciesVerificationJenkinsfile")
+            lightweight()
+        }
+    }
+    logRotator {
+        daysToKeep(7)
+    }
+}

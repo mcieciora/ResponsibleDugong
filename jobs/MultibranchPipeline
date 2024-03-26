@@ -1,0 +1,20 @@
+multibranchPipelineJob("MultibranchPipeline_INPUT.PROJECT_NAME") {
+    branchSources {
+        git {
+            id("INPUT.RANDOM_INT")
+            remote("INPUT.PROJECT_URL")
+            includes("*")
+        }
+    }
+    displayName("MultibranchPipeline_INPUT.PROJECT_NAME")
+    triggers {
+        periodicFolderTrigger {
+            interval("5m")
+        }
+    }
+    orphanedItemStrategy {
+        discardOldItems {
+            daysToKeep(7)
+        }
+    }
+}

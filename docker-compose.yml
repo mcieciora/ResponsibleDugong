@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  registry:
+    image: registry:2
+    container_name: registry
+    ports:
+      - "5000:5000"
+    volumes:
+      - registry-volume:/var/lib/registry:rw
+  jenkins:
+    image: jenkins
+    container_name: jenkins
+    build:
+      context: .
+      dockerfile: jenkins.Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkins-volume:/var/jenkins_home
+volumes:
+  jenkins-volume:
+  registry-volume:

@@ -1,0 +1,43 @@
+jenkins:
+  systemMessage: "Welcome to Jenkins! Hope you will have great time here."
+  numExecutors: 0
+  mode: NORMAL
+  scmCheckoutRetryCount: 1
+  labelString: "master"
+  crumbIssuer: "standard"
+  projectNamingStrategy:
+    roleBased:
+      forceExistingJobs: false
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: admin_user
+         password: "password"
+       - id: jenkins_user
+         password: "password"
+  authorizationStrategy:
+    roleBased:
+      roles:
+        global:
+          - name: "admin_user"
+            description: "Jenkins administrators"
+            permissions:
+              - "Overall/Administer"
+            entries:
+              - user: "admin_user"
+          - name: "jenkins_user"
+            description: "Read-only users"
+            permissions:
+              - "Overall/Read"
+              - "Job/Read"
+            entries:
+              - user: "jenkins_user"
+jobs:
+  - file: /root/casc/initial_jobs/SetupDSLJobs
+security:
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: false
+unclassified:
+  location:
+    url: http://localhost:8080

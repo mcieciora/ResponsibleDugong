@@ -1,0 +1,21 @@
+pipelineJob("SetupDSLJobs") {
+    parameters {
+        stringParam("PROJECT_NAME", "CarelessVaquita", "Project name.")
+        stringParam("PROJECT_URL", "https://github.com/mcieciora/CarelessVaquita.git", "Full github url to repository.")
+        stringParam("RANDOM_INT", "00000000", "Random 8 numbers integer.")
+    }
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("https://github.com/mcieciora/CarelessVaquita.git")
+                    }
+                    branch("*/master")
+                }
+            }
+            scriptPath("casc/initial_jobs/SetupDSLJobs.Jenkinsfile")
+            lightweight()
+        }
+    }
+}
