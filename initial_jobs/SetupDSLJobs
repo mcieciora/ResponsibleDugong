@@ -1,8 +1,8 @@
 pipelineJob("SetupDSLJobs") {
+    authenticationToken("secret")
     parameters {
         stringParam("PROJECT_NAME", "CarelessVaquita", "Project name.")
         stringParam("PROJECT_URL", "https://github.com/mcieciora/CarelessVaquita.git", "Full github url to repository.")
-        stringParam("RANDOM_INT", "00000000", "Random 8 numbers integer.")
     }
     definition {
         cpsScm {

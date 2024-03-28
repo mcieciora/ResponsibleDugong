@@ -8,11 +8,9 @@ services:
     volumes:
       - registry-volume:/var/lib/registry:rw
   jenkins:
-    image: jenkins
     container_name: jenkins
     build:
       context: .
-      dockerfile: jenkins.Dockerfile
     ports:
       - "8080:8080"
     volumes:

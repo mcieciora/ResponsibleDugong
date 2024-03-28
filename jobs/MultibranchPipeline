@@ -1,7 +1,6 @@
 multibranchPipelineJob("MultibranchPipeline_INPUT.PROJECT_NAME") {
     branchSources {
         git {
-            id("INPUT.RANDOM_INT")
             remote("INPUT.PROJECT_URL")
             includes("*")
         }
