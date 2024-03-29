@@ -1,0 +1,19 @@
+pipelineJob("ScanDockerImages_INPUT.PROJECT_NAME") {
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("INPUT.PROJECT_URL")
+                    }
+                    branch("*/develop")
+                }
+            }
+            scriptPath("tools/jenkins/ScanDockerImagesJenkinsfile")
+            lightweight()
+        }
+    }
+    logRotator {
+        daysToKeep(7)
+    }
+}

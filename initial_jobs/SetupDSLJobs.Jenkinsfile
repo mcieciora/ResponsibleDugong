@@ -12,7 +12,7 @@ pipeline {
                         sh "sed -i 's~INPUT.PROJECT_NAME~${env.PROJECT_NAME}~g' *"
                         sh "sed -i 's~INPUT.PROJECT_URL~${env.PROJECT_URL}~g' *"
                     }
-                    jobDsl targets: 'casc/jobs/*'
+                    jobDsl targets: 'jobs/*'
                 }
             }
         }

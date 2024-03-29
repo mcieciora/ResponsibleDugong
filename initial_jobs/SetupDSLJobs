@@ -9,12 +9,12 @@ pipelineJob("SetupDSLJobs") {
             scm {
                 git {
                     remote {
-                        url("https://github.com/mcieciora/CarelessVaquita.git")
+                        url("https://github.com/mcieciora/ResponsibleDugong.git")
                     }
-                    branch("*/master")
+                    branch("*/feature/move_casc_from_careless_vaquita")
                 }
             }
-            scriptPath("casc/initial_jobs/SetupDSLJobs.Jenkinsfile")
+            scriptPath("initial_jobs/SetupDSLJobs.Jenkinsfile")
             lightweight()
         }
     }
