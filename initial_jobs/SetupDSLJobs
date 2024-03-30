@@ -3,6 +3,7 @@ pipelineJob("SetupDSLJobs") {
     parameters {
         stringParam("PROJECT_NAME", "CarelessVaquita", "Project name.")
         stringParam("PROJECT_URL", "https://github.com/mcieciora/CarelessVaquita.git", "Full github url to repository.")
+        stringParam("BRANCH_NAME", "*/master", "Repository base branch name.")
     }
     definition {
         cpsScm {
