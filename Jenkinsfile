@@ -28,7 +28,7 @@ pipeline {
         stage ("Launch Jenkins instance") {
             steps {
                 script {
-                    load("script/launch_jenkins.groovy")
+                    load("scripts/launch_jenkins.groovy")
                 }
             }
         }
