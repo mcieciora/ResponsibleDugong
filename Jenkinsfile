@@ -28,7 +28,7 @@ pipeline {
         stage ("Launch Jenkins instance") {
             steps {
                 script {
-                    load("scripts/launch_jenkins.groovy")
+                    println("Tests to be implemented")
                 }
             }
         }
@@ -43,7 +43,7 @@ pipeline {
     }
     post {
         always {
-            sh "docker rmi app_image"
+            sh "docker rmi jenkins_image"
             sh "docker logout"
             dir("${WORKSPACE}") {
                 deleteDir()
