@@ -43,7 +43,9 @@ pipeline {
                     docker.withRegistry("", "dockerhub_id") {
                         def curDate = new Date().format("yyMMdd-HHmm", TimeZone.getTimeZone("UTC"))
                         jenkinsImage.push("test-${curDate}")
-                        jenkinsImage.push("latest")
+                        if (env.BRANCH_NAME == "master") {
+                            jenkinsImage.push("latest")
+                        }
                     }
                 }
             }
