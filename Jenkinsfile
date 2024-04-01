@@ -8,23 +8,40 @@ pipeline {
                 }
             }
         }
-        stage("Build Jenkins image") {
+        stage ("Build Jenkins image") {
             steps {
                 script {
                     sh "docker build -t jenkins_image ."
                 }
             }
         }
+        stage ("Analyze image") {
+            steps {
+                script {
+                    sh "docker scout cves jenkins_image --exit-code --only-severity critical,high"
+                }
+            }
+        }
         stage ("Launch Jenkins instance") {
             steps {
                 script {
-                    sh "python scripts/launch_jenkins.py"
+                    load("script/launch_jenkins.groovy")
+                }
+            }
+        }
+        stage ("Push image") {
+            steps {
+                script {
+                    def customImage = docker.build("app_image")
+                    customImage.push("mcieciora/responsible_dugong:${env.BUILD_ID}")
                 }
             }
         }
     }
     post {
         always {
+            sh "docker rmi app_image"
+            sh "docker logout"
             dir("${WORKSPACE}") {
                 deleteDir()
             }
