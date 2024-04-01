@@ -1,5 +1,10 @@
+def jenkinsImage
+
 pipeline {
     agent any
+    environment {
+        DOCKERHUB_REPO = "mcieciora/responsible_dugong"
+    }
     stages {
         stage ("Checkout branch") {
             steps {
@@ -11,7 +16,7 @@ pipeline {
         stage ("Build Jenkins image") {
             steps {
                 script {
-                    sh "docker build -t jenkins_image ."
+                    jenkinsImage = docker.build("${DOCKERHUB_REPO}:jenkins_image")
                 }
             }
         }
@@ -21,7 +26,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
                         sh "docker login --username $USERNAME --password $PASSWORD"
                     }
-                    sh "docker scout cves jenkins_image"
+                    sh "docker scout cves ${DOCKERHUB_REPO}:jenkins_image"
                 }
             }
         }
@@ -35,15 +40,18 @@ pipeline {
         stage ("Push image") {
             steps {
                 script {
-                    def customImage = docker.build("app_image")
-                    customImage.push("mcieciora/responsible_dugong:${env.BUILD_ID}")
+                    docker.withRegistry("", "dockerhub_id") {
+                        def curDate = new Date().format("yyMMdd-HHmm", TimeZone.getTimeZone("UTC"))
+                        jenkinsImage.push("test-${curDate}")
+                        jenkinsImage.push("latest")
+                    }
                 }
             }
         }
     }
     post {
         always {
-            sh "docker rmi jenkins_image"
+            sh "docker rmi ${DOCKERHUB_REPO}:jenkins_image"
             sh "docker logout"
             dir("${WORKSPACE}") {
                 deleteDir()

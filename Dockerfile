@@ -10,8 +10,10 @@ COPY jenkins.yaml /root/jenkins.yaml
 COPY initial_jobs /root/casc/initial_jobs
 RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
+# Install docker and docker compose
 RUN apk add docker docker-compose openrc
 RUN rc-update add docker default
 
+# Install docker scout
 RUN curl -fsSL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh -o install-scout.sh
 RUN sh install-scout.sh && rm install-scout.sh
