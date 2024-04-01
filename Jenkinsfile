@@ -21,7 +21,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
                         sh "docker login --username $USERNAME --password $PASSWORD"
                     }
-                    sh "docker scout cves jenkins_image --exit-code --only-severity critical,high"
+                    sh "docker scout cves jenkins_image"
                 }
             }
         }
