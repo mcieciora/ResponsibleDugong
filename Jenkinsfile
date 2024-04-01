@@ -6,13 +6,6 @@ pipeline {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
     }
     stages {
-        stage ("Checkout branch") {
-            steps {
-                script {
-                    git branch: "feature/move_casc_from_careless_vaquita", url: "https://github.com/mcieciora/ResponsibleDugong.git"
-                }
-            }
-        }
         stage ("Build Jenkins image") {
             steps {
                 script {
