@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  registry:
+    image: registry:2
+    container_name: registry
+    ports:
+      - "5000:5000"
+    volumes:
+      - registry-volume:/var/lib/registry:rw
+  jenkins:
+    container_name: jenkins
+    image: mcieciora/responsible_dugong:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - jenkins-volume:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+volumes:
+  jenkins-volume:
+  registry-volume:
