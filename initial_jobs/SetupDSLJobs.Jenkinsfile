@@ -3,7 +3,7 @@ pipeline {
     parameters {
         string(name: "PROJECT_NAME", defaultValue: "CarelessVaquita", description: "Project name.")
         string(name: "PROJECT_URL", defaultValue: "https://github.com/mcieciora/CarelessVaquita.git", description: "Full github url to repository.")
-        string(name: "BRANCH_NAME", defaultValue: "*/master", description: "Branch name.")
+        string(name: "BRANCH_NAME", defaultValue: "master", description: "Branch name.")
     }
     stages {
         stage ("Checkout branch") {

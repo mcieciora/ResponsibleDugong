@@ -9,13 +9,11 @@ services:
       - registry-volume:/var/lib/registry:rw
   jenkins:
     container_name: jenkins
-    build:
-      context: .
+    image: mcieciora/responsible_dugong:latest
     ports:
       - "8080:8080"
     volumes:
-      # - jenkins-volume:/var/jenkins_home
-      - ./jenkins_volume:/var/jenkins_home
+      - jenkins-volume:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
 volumes:
   jenkins-volume:
