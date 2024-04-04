@@ -22,7 +22,7 @@ function wait_for_jenkins_instance() {
 
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
-  JENKINS_URL=http://127.0.0.1:8085
+  JENKINS_URL=http://jenkins_image:8085
   JENKINS_USER="admin_user"
   JENKINS_PASSWORD="password"
   echo "Sending crumb request..."
