@@ -79,7 +79,7 @@ function run_tests() {
 }
 
 echo "Launching Jenkins instance..."
-docker run -d --name test_jenkins_instance -p 8085:8080 jenkins_image
+docker run -d --name test_jenkins_instance --network jenkins_network -p 8085:8080 jenkins_image
 echo "Sleeping for 5 seconds before checking boot status..."
 sleep 5
 
