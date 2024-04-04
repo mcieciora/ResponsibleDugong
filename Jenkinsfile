@@ -23,10 +23,11 @@ pipeline {
                 }
             }
         }
-        stage ("Launch Jenkins instance") {
+        stage ("Run Jenkins instance tests") {
             steps {
                 script {
-                    println("Tests to be implemented")
+                    sh "chmod +x scripts/test_jenkins_setup.sh"
+                    sh "scripts/test_jenkins_setup.sh"
                 }
             }
         }
@@ -46,6 +47,8 @@ pipeline {
     }
     post {
         always {
+            sh "docker stop test_jenkins_instance"
+            sh "docker container rm test_jenkins_instance"
             sh "docker rmi ${DOCKERHUB_REPO}:jenkins_image"
             sh "docker logout"
             dir("${WORKSPACE}") {

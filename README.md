@@ -1,5 +1,5 @@
 <h2>What is <i>ResponsibleDugong</i></h2>  
-Responsible Dugong is an <i>open source setup of Jenkins instance preconfigured as a code.</i> This project is closely correlated to [CarelessVaquita](https://github.com/mcieciora/CarelessVaquita).
+Responsible Dugong is an <i>open source setup of Jenkins instance preconfigured as a code.</i> This project is closely correlated to [CarelessVaquita](https://github.com/mcieciora/CarelessVaquita) .
 
 Currently supported tools and versions:
 
@@ -84,6 +84,8 @@ After logging into your Jenkins instance there should be already one job ready t
 
 
 <b>NOTE:</b> It is not mandatory to run SetupDSLJobs on project, that is forked CarelessVaquita project. It is not even required to have the same files structure, but the only directory that <b>must</b> exist is <i>jobs</i>, where pipelines declaration should be defined.
+
+If you are using CarelessVaquita as template project, remember about setting _user.email_ and _user.name_ with git config --global command inside Jenkins instance.
 
 Happy Dugonging ;)  
 

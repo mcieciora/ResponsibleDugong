@@ -12,7 +12,7 @@ pipelineJob("SetupDSLJobs") {
                     remote {
                         url("https://github.com/mcieciora/ResponsibleDugong.git")
                     }
-                    branch("*/feature/move_casc_from_careless_vaquita")
+                    branch("*/develop")
                 }
             }
             scriptPath("initial_jobs/SetupDSLJobs.Jenkinsfile")
