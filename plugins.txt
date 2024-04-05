@@ -6,3 +6,4 @@ docker-workflow:latest
 rebuild:latest
 parameterized-scheduler:latest
 job-dsl:latest
+ws-cleanup:latest
