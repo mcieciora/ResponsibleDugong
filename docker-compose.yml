@@ -10,12 +10,14 @@ services:
     networks:
       - service_network
   jenkins:
-    image: mcieciora/responsible_dugong:latest
+    # image: mcieciora/responsible_dugong:latest
+    build:
+      context: .
     container_name: jenkins
     ports:
       - "8080:8080"
     volumes:
-      - jenkins-volume:/var/jenkins_home
+      - .jenkins_volume:/var/jenkins_home
       - .ssh_keys:/root/.ssh
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
