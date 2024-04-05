@@ -1,5 +1,5 @@
 pipelineJob("SetupDSLJobs") {
-    authenticationToken("secret")
+    authenticationToken("${SECRET}")
     parameters {
         stringParam("PROJECT_NAME", "CarelessVaquita", "Project name.")
         stringParam("PROJECT_URL", "https://github.com/mcieciora/CarelessVaquita.git", "Full github url to repository.")
