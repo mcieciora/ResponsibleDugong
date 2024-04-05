@@ -22,7 +22,7 @@ function wait_for_jenkins_instance() {
 
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
-  JENKINS_URL=http://test_jenkins_instance:8085
+  JENKINS_URL="http://test_jenkins_instance:8080"
   JENKINS_USER="admin_user"
   JENKINS_PASSWORD="password"
   echo "Sending crumb request..."
@@ -79,7 +79,7 @@ function run_tests() {
 }
 
 echo "Launching Jenkins instance..."
-docker run -d --name test_jenkins_instance --network jenkins_network -p 8085:8080 jenkins_image
+docker run -d --name test_jenkins_instance --network jenkins_network jenkins_image
 echo "Sleeping for 5 seconds before checking boot status..."
 sleep 5
 

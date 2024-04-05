@@ -10,8 +10,8 @@ services:
     networks:
       - service_network
   jenkins:
-    container_name: jenkins
     image: mcieciora/responsible_dugong:latest
+    container_name: jenkins
     ports:
       - "8080:8080"
     volumes:
@@ -22,7 +22,7 @@ services:
       - service_network
 networks:
   service_network:
-    name: jenkins_network
+      name: jenkins_network
 volumes:
   jenkins-volume:
   registry-volume:
