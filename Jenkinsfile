@@ -17,16 +17,17 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
-                        sh "docker login --username $USERNAME --password $PASSWORD"
+                        sh "chmod +x scripts/scan_jenkins_image.sh"
+                        sh "scripts/scan_jenkins_image.sh"
                     }
-                    sh "docker scout cves ${DOCKERHUB_REPO}:jenkins_image"
                 }
             }
         }
-        stage ("Launch Jenkins instance") {
+        stage ("Run Jenkins instance tests") {
             steps {
                 script {
-                    println("Tests to be implemented")
+                    sh "chmod +x scripts/test_jenkins_setup.sh"
+                    sh "scripts/test_jenkins_setup.sh"
                 }
             }
         }
@@ -46,8 +47,9 @@ pipeline {
     }
     post {
         always {
+            sh "docker stop test_jenkins_instance"
+            sh "docker container rm test_jenkins_instance"
             sh "docker rmi ${DOCKERHUB_REPO}:jenkins_image"
-            sh "docker logout"
             dir("${WORKSPACE}") {
                 deleteDir()
             }

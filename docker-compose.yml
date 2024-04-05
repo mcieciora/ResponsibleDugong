@@ -7,14 +7,22 @@ services:
       - "5000:5000"
     volumes:
       - registry-volume:/var/lib/registry:rw
+    networks:
+      - service_network
   jenkins:
-    container_name: jenkins
     image: mcieciora/responsible_dugong:latest
+    container_name: jenkins
     ports:
       - "8080:8080"
     volumes:
       - jenkins-volume:/var/jenkins_home
+      - .ssh_keys:/root/.ssh
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - service_network
+networks:
+  service_network:
+      name: jenkins_network
 volumes:
   jenkins-volume:
   registry-volume:
