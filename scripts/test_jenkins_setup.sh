@@ -23,8 +23,8 @@ function wait_for_jenkins_instance() {
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
   JENKINS_URL="http://test_jenkins_instance:8080"
-  JENKINS_USER="admin_user"
-  JENKINS_PASSWORD="password"
+  JENKINS_USER="$JENKINS_ADMIN_USER"
+  JENKINS_PASSWORD="$JENKINS_ADMIN_PASS"
   echo "Sending crumb request..."
   CRUMB=$(curl "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar cookies.txt --user "$JENKINS_USER:$JENKINS_PASSWORD")
   echo "Using crumb to get API token..."
@@ -37,7 +37,7 @@ function generate_crumb_and_token() {
 }
 
 function start_setup_dsl_job() {
-  curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=secret" --user "$JENKINS_USER:$TOKEN"
+  curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
   sleep 30
   echo "Finished waiting."

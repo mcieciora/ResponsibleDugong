@@ -12,27 +12,18 @@ jenkins:
     local:
       allowsSignup: false
       users:
-       - id: admin_user
-         password: "password"
-       - id: jenkins_user
-         password: "password"
+       - id: ${JENKINS_ADMIN_USER}
+         password: ${JENKINS_ADMIN_PASS}
   authorizationStrategy:
     roleBased:
       roles:
         global:
-          - name: "admin_user"
+          - name: "jenkins_administrators"
             description: "Jenkins administrators"
             permissions:
               - "Overall/Administer"
             entries:
-              - user: "admin_user"
-          - name: "jenkins_user"
-            description: "Read-only users"
-            permissions:
-              - "Overall/Read"
-              - "Job/Read"
-            entries:
-              - user: "jenkins_user"
+              - user: ${JENKINS_ADMIN_USER}
 jobs:
   - file: /root/casc/initial_jobs/SetupDSLJobs
 security:

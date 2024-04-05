@@ -1,5 +1,5 @@
 <h2>What is <i>ResponsibleDugong</i></h2>  
-Responsible Dugong is an <i>open source setup of Jenkins instance preconfigured as a code.</i> This project is closely correlated to [CarelessVaquita](https://github.com/mcieciora/CarelessVaquita) .
+Responsible Dugong is an <i>open source setup of Jenkins instance preconfigured as a code.</i> This project is closely correlated to [CarelessVaquita](https://github.com/mcieciora/CarelessVaquita).
 
 Currently supported tools and versions:
 
