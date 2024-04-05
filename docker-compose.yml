@@ -10,9 +10,7 @@ services:
     networks:
       - service_network
   jenkins:
-    # image: mcieciora/responsible_dugong:latest
-    build:
-      context: .
+    image: mcieciora/responsible_dugong:latest
     container_name: jenkins
     ports:
       - "8080:8080"
