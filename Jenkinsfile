@@ -37,6 +37,9 @@ pipeline {
                     docker.withRegistry("", "dockerhub_id") {
                         def curDate = new Date().format("yyMMdd-HHmm", TimeZone.getTimeZone("UTC"))
                         jenkinsImage.push("test-${curDate}")
+                        if (env.BRANCH_NAME == "develop") {
+                            jenkinsImage.push("develop")
+                        }
                         if (env.BRANCH_NAME == "master") {
                             jenkinsImage.push("latest")
                         }
@@ -50,9 +53,7 @@ pipeline {
             sh "docker stop test_jenkins_instance"
             sh "docker container rm test_jenkins_instance"
             sh "docker rmi ${DOCKERHUB_REPO}:jenkins_image"
-            dir("${WORKSPACE}") {
-                deleteDir()
-            }
+            cleanWs()
         }
     }
 }
