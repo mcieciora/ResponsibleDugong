@@ -1,5 +1,5 @@
 pipelineJob("TestOnNextJenkinsBuildPipeline") {
-    authenticationToken("${env.SECRET}")
+    authenticationToken("${SECRET}")
     parameters {
         stringParam("BRANCH", "develop", "Execution branch.")
     }
