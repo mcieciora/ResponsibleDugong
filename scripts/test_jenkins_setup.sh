@@ -22,7 +22,7 @@ function wait_for_jenkins_instance() {
 
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
-  JENKINS_URL="http://test_jenkins_instance:8080"
+  JENKINS_URL="http://localhost:8080"
   JENKINS_USER="$JENKINS_ADMIN_USER"
   JENKINS_PASSWORD="$JENKINS_ADMIN_PASS"
   echo "Sending crumb request..."
@@ -43,7 +43,7 @@ function start_setup_dsl_job() {
   echo "Finished waiting."
 }
 
-function run_tests() {
+function test_setup_dsl_job() {
   EXPECTED_JOBS_ARRAY=("SetupDSLJobs" "PythonDependenciesVerification_CarelessVaquita"  "MultibranchPipeline_CarelessVaquita"
   "ScanDockerImages_CarelessVaquita" "ParametrizedTestPipeline_CarelessVaquita")
   echo "Getting list of all jobs..."
@@ -79,11 +79,11 @@ function run_tests() {
 }
 
 echo "Launching Jenkins instance..."
-docker run -d --name test_jenkins_instance --network jenkins_network jenkins_image
+docker run -d --name test_jenkins_instance -p 8085:8080 jenkins_image
 echo "Sleeping for 5 seconds before checking boot status..."
 sleep 5
 
 wait_for_jenkins_instance
 generate_crumb_and_token
 start_setup_dsl_job
-run_tests
+test_setup_dsl_job
