@@ -1,0 +1,22 @@
+pipelineJob("TestOnNextJenkinsBuildJenkinsfile") {
+    parameters {
+        stringParam("BRANCH", "develop", "Execution branch.")
+    }
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("https://github.com/mcieciora/ResponsibleDugong.git")
+                    }
+                     branch('*/${BRANCH}')
+                }
+            }
+            scriptPath("TestOnNextJenkinsBuildJenkinsfile")
+            lightweight()
+        }
+    }
+    logRotator {
+        daysToKeep(7)
+    }
+}
