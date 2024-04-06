@@ -4,7 +4,7 @@ listView("INPUT.PROJECT_NAME") {
     filterExecutors()
     jobs {
         name('INPUT.PROJECT_NAME')
-        regex('.*INPUT.PROJECT_NAME.*')
+        regex('(.*ResponsibleDugong.*|TestOnNextJenkinsBuildJenkinsfile)')
     }
     columns {
         status()
