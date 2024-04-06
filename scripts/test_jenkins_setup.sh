@@ -37,7 +37,7 @@ function generate_crumb_and_token() {
 }
 
 function start_setup_dsl_job() {
-  curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET&PROJECT_URL=https://github.com/mcieciora/ResponsibleDugong.git&PROJECT_NAME=ResponsibleDugong&BRANCH_NAME=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
+  curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
   sleep 30
   echo "Finished waiting."
@@ -79,10 +79,19 @@ function test_setup_dsl_job() {
 }
 
 function test_on_next_jenkins_build_pipeline() {
+  curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET&PROJECT_URL=https://github.com/mcieciora/ResponsibleDugong.git&PROJECT_NAME=ResponsibleDugong&BRANCH_NAME=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
+  echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
+  sleep 30
+  echo "Finished waiting."
   curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/buildWithParameters?delay=0sec&token=$SECRET&BRANCH=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let TestOnNextJenkinsBuildPipeline finish..."
   sleep 30
   echo "Finished waiting."
+  BUILD_RESULT=$(curl "$JENKINS_URL/job/TestOnNextJenkinsBuildJenkinsfile/1/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
+  echo "$BUILD_RESULT" > "build_result.json"
+  if jq -r ".result" "build_result.json" -nq "SUCCESS"; then
+    curl "$JENKINS_URL/job/TestOnNextJenkinsBuildJenkinsfile/1/consoleText" --user "$JENKINS_USER:$TOKEN"
+  fi
 }
 
 echo "Launching Jenkins instance..."
