@@ -22,7 +22,7 @@ function wait_for_jenkins_instance() {
 
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
-  JENKINS_URL="http://localhost:8080"
+  JENKINS_URL="http://test_jenkins_instance:8080"
   JENKINS_USER="$JENKINS_ADMIN_USER"
   JENKINS_PASSWORD="$JENKINS_ADMIN_PASS"
   echo "Sending crumb request..."
@@ -37,7 +37,7 @@ function generate_crumb_and_token() {
 }
 
 function start_setup_dsl_job() {
-  curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET" --user "$JENKINS_USER:$TOKEN"
+  curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET&PROJECT_URL=https://github.com/mcieciora/ResponsibleDugong.git&PROJECT_NAME=ResponsibleDugong&BRANCH_NAME=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
   sleep 30
   echo "Finished waiting."
@@ -78,8 +78,15 @@ function test_setup_dsl_job() {
   done
 }
 
+function test_on_next_jenkins_build_pipeline() {
+  curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/buildWithParameters?delay=0sec&token=$SECRET&BRANCH=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
+  echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
+  sleep 30
+  echo "Finished waiting."
+}
+
 echo "Launching Jenkins instance..."
-docker run -d --name test_jenkins_instance -p 8085:8080 jenkins_image
+docker run -d --name test_jenkins_instance jenkins_image
 echo "Sleeping for 5 seconds before checking boot status..."
 sleep 5
 
@@ -87,3 +94,4 @@ wait_for_jenkins_instance
 generate_crumb_and_token
 start_setup_dsl_job
 test_setup_dsl_job
+test_on_next_jenkins_build_pipeline

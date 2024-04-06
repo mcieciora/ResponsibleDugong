@@ -26,7 +26,8 @@ pipeline {
         stage ("Run tests on next Jenkins build") {
             steps {
                 script {
-                    build job: "/TestOnNextJenkinsBuildPipeline", parameters: [string(name: "BRANCH", value: "${env.BRANCH}")]
+                    sh "chmod +x scripts/test_jenkins_setup.sh"
+                    sh "scripts/test_jenkins_setup.sh"
                 }
             }
         }

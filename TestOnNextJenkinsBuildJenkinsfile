@@ -3,21 +3,16 @@ def jenkinsImage
 pipeline {
     agent any
     environment {
-        DOCKERHUB_REPO = "mcieciora/responsible_dugong"
+        REPO_URL = "https://github.com/mcieciora/ResponsibleDugong.git"
+    }
+    options {
+        skipDefaultCheckout()
     }
     stages {
         stage ("Checkout branch") {
             steps {
                 script {
-                    jenkinsImage = docker.build("${DOCKERHUB_REPO}:jenkins_image")
-                }
-            }
-        }
-        stage ("Run Jenkins instance tests") {
-            steps {
-                script {
-                    sh "chmod +x scripts/test_jenkins_setup.sh"
-                    sh "scripts/test_jenkins_setup.sh"
+                    git branch: params.BRANCH, url: env.REPO_URL
                 }
             }
         }
