@@ -19,6 +19,7 @@ pipeline {
                     dir("jobs") {
                         sh "sed -i 's~INPUT.PROJECT_NAME~${env.PROJECT_NAME}~g' *"
                         sh "sed -i 's~INPUT.PROJECT_URL~${env.PROJECT_URL}~g' *"
+                        sh "sed -i 's~INPUT.SECRET~${env.SECRET}~g' *"
                     }
                     jobDsl targets: 'jobs/*'
                 }
