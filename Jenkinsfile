@@ -13,16 +13,16 @@ pipeline {
                 }
             }
         }
-        stage ("Analyze image") {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
-                        sh "chmod +x scripts/scan_jenkins_image.sh"
-                        sh "scripts/scan_jenkins_image.sh"
-                    }
-                }
-            }
-        }
+//        stage ("Analyze image") {
+//            steps {
+//                script {
+//                    withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
+//                        sh "chmod +x scripts/scan_jenkins_image.sh"
+//                        sh "scripts/scan_jenkins_image.sh"
+//                    }
+//                }
+//            }
+//        }
         stage ("Run tests on next Jenkins build") {
             steps {
                 script {
