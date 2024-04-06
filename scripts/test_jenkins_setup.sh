@@ -87,8 +87,10 @@ function test_on_next_jenkins_build_pipeline() {
   echo "Sleeping for 30 seconds to let TestOnNextJenkinsBuildPipeline finish..."
   sleep 30
   echo "Finished waiting."
+  curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN"
   BUILD_RESULT=$(curl "$JENKINS_URL/job/TestOnNextJenkinsBuildJenkinsfile/1/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$BUILD_RESULT" > "build_result.json"
+  echo "$BUILD_RESULT"
   if jq -r ".result" "build_result.json" -nq "SUCCESS"; then
     curl "$JENKINS_URL/job/TestOnNextJenkinsBuildJenkinsfile/1/consoleText" --user "$JENKINS_USER:$TOKEN"
   fi
