@@ -1,4 +1,4 @@
-pipelineJob("TestOnNextJenkinsBuildJenkinsfile") {
+pipelineJob("TestOnNextJenkinsBuildPipeline") {
     parameters {
         stringParam("BRANCH", "develop", "Execution branch.")
     }
