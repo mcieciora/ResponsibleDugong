@@ -23,7 +23,7 @@ pipeline {
                 }
             }
         }
-        stage ("Run Jenkins instance tests") {
+        stage ("Run tests on next Jenkins build") {
             steps {
                 script {
                     sh "chmod +x scripts/test_jenkins_setup.sh"
