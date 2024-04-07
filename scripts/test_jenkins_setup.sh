@@ -90,7 +90,7 @@ function test_on_next_jenkins_build_pipeline() {
   echo "Finished waiting."
   BUILD_RESULT=$(curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/1/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$BUILD_RESULT" > "build_result.json"
-  jq -r ".result" "build_result.json" | grep "FAILURE"
+  jq -r ".result" "build_result.json" | grep "SUCCESS"
   RET_VAL=$?
   if [ $RET_VAL -ne 0 ]; then
     echo "TestOnNextJenkinsBuildPipeline finished with result FAILURE. Obtaining full consoleText."
