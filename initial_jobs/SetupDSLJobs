@@ -12,7 +12,7 @@ pipelineJob("SetupDSLJobs") {
                     remote {
                         url("https://github.com/mcieciora/ResponsibleDugong.git")
                     }
-                    branch("*/develop")
+                    branch("*/feature/test_on_next_jenkins_instance_build")
                 }
             }
             scriptPath("initial_jobs/SetupDSLJobs.Jenkinsfile")
