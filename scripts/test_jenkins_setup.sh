@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+source "$(dirname pwd)/.env_example"
+
 function wait_for_jenkins_instance() {
   RETRY=1
   MAX_RETRIES=12
@@ -22,9 +24,11 @@ function wait_for_jenkins_instance() {
 
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
-  JENKINS_URL="http://test_jenkins_instance:8080"
+  JENKINS_URL="http://localhost:8085"
   JENKINS_USER="$JENKINS_ADMIN_USER"
   JENKINS_PASSWORD="$JENKINS_ADMIN_PASS"
+  echo "$JENKINS_USER"
+  echo "$JENKINS_PASSWORD"
   echo "Sending crumb request..."
   CRUMB=$(curl "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar cookies.txt --user "$JENKINS_USER:$JENKINS_PASSWORD")
   echo "Using crumb to get API token..."
@@ -90,14 +94,20 @@ function test_on_next_jenkins_build_pipeline() {
   curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN"
   BUILD_RESULT=$(curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/1/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$BUILD_RESULT" > "build_result.json"
-  cat "build_result.json"
-  if jq -r ".result" "build_result.json" | grep "SUCCESS"; then
+  if jq -r ".result" "build_result.json" | grep "FAILURE"; then
+    echo "TestOnNextJenkinsBuildPipeline finished with result FAILURE. Obtaining full consoleText."
     curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/1/consoleText" --user "$JENKINS_USER:$TOKEN"
+    RET_VAL=$?
   fi
+  if [ $RET_VAL -ne 0 ]; then
+    echo "jq command failed to execute."
+  fi
+  exit "$RET_VAL"
 }
 
 echo "Launching Jenkins instance..."
-docker run -d --name test_jenkins_instance --env-file .env_example --network jenkins_network "$DOCKERHUB_REPO":jenkins_image
+# docker run -d --name test_jenkins_instance --env-file .env_example --network jenkins_network "$DOCKERHUB_REPO":jenkins_image
+docker run -p 8085:8080 -d --name test_jenkins_instance --env-file .env_example jenkins_image
 echo "Sleeping for 5 seconds before checking boot status..."
 sleep 5
 
