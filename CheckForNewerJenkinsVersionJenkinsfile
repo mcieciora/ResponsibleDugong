@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+    triggers {
+        parameterizedCron('''
+                H 6 * * * %BRANCH=develop
+        ''')
+    }
+    stages {
+        stage("Check for Jenkins updates") {
+            steps {
+                script {
+                    sh "chmod +x scripts/verify_jenkins_version.sh"
+                    EXIT_CODE = sh(script: "scripts/verify_jenkins_version.sh", returnStatus: true)
+                    if (EXIT_CODE == 2) {
+                        unstable("There is new Jenkins version available.")
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
