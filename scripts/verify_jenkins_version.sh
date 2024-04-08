@@ -1,9 +1,9 @@
 function generate_crumb_and_token() {
   echo "Sending crumb request..."
-  CRUMB=$(curl "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar "$DEST_DIR/cookies.txt" --user "$JENKINS_USER:$JENKINS_PASSWORD")
+  CRUMB=$(curl "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar "$TOKEN_DIR/cookies.txt" --user "$JENKINS_USER:$JENKINS_PASSWORD")
   echo "Using crumb to get API token..."
   TOKEN_DATA=$(curl "$JENKINS_URL/user/$JENKINS_USER/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken" \
-  --user "$JENKINS_USER:$JENKINS_PASSWORD" --data "newTokenName=jenkins-version" --cookie "$DEST_DIR/cookies.txt" -H "$CRUMB")
+  --user "$JENKINS_USER:$JENKINS_PASSWORD" --data "newTokenName=jenkins-version" --cookie "$TOKEN_DIR/cookies.txt" -H "$CRUMB")
   echo "Saving acquired API token..."
   echo "$TOKEN_DATA" > "$OUTPUT_FILE"
 }
@@ -44,7 +44,7 @@ JENKINS_URL="$JENKINS_URL"
 JENKINS_USER="$JENKINS_ADMIN_USER"
 JENKINS_PASSWORD="$JENKINS_ADMIN_PASS"
 TOKEN_DIR="$TOKEN_DIR"
-OUTPUT_FILE="$DEST_DIR/token_data.json"
+OUTPUT_FILE="$TOKEN_DIR/token_data.json"
 
 CURRENT_VERSION=$(get_current_version)
 get_stable_version "$CURRENT_VERSION"
