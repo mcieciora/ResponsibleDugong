@@ -1,3 +1,7 @@
+#!/bin/bash
+
+set -e
+
 function generate_crumb_and_token() {
   echo "Sending crumb request..."
   CRUMB=$(curl "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar "$TOKEN_DIR/cookies.txt" --user "$JENKINS_USER:$JENKINS_PASSWORD")
