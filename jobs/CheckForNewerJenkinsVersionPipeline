@@ -1,0 +1,19 @@
+pipelineJob("CheckForNewestJenkinsVersionPipeline") {
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("https://github.com/mcieciora/ResponsibleDugong.git")
+                    }
+                     branch('*/develop')
+                }
+            }
+            scriptPath("CheckForNewestJenkinsVersionJenkinsfile")
+            lightweight()
+        }
+    }
+    logRotator {
+        daysToKeep(7)
+    }
+}

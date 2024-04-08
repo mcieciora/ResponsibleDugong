@@ -1,4 +1,5 @@
 #!/bin/bash
+
 set -e
 
 function wait_for_jenkins_instance() {
@@ -43,7 +44,7 @@ function start_setup_dsl_job() {
   echo "Finished waiting."
 }
 
-function run_tests() {
+function test_setup_dsl_job() {
   EXPECTED_JOBS_ARRAY=("SetupDSLJobs" "PythonDependenciesVerification_CarelessVaquita"  "MultibranchPipeline_CarelessVaquita"
   "ScanDockerImages_CarelessVaquita" "ParametrizedTestPipeline_CarelessVaquita")
   echo "Getting list of all jobs..."
@@ -78,12 +79,33 @@ function run_tests() {
   done
 }
 
+function test_on_next_jenkins_build_pipeline() {
+  curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET&PROJECT_URL=https://github.com/mcieciora/ResponsibleDugong.git&PROJECT_NAME=ResponsibleDugong&BRANCH_NAME=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
+  echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
+  sleep 30
+  echo "Finished waiting."
+  curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/buildWithParameters?delay=0sec&token=$SECRET&BRANCH=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
+  echo "Sleeping for 15 seconds to let TestOnNextJenkinsBuildPipeline finish..."
+  sleep 15
+  echo "Finished waiting."
+  BUILD_RESULT=$(curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/1/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
+  echo "$BUILD_RESULT" > "build_result.json"
+  jq -r ".result" "build_result.json" | grep "SUCCESS"
+  RET_VAL=$?
+  if [ $RET_VAL -ne 0 ]; then
+    echo "TestOnNextJenkinsBuildPipeline finished with result FAILURE. Obtaining full consoleText."
+    curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/1/consoleText" --user "$JENKINS_USER:$TOKEN"
+    exit "$RET_VAL"
+  fi
+}
+
 echo "Launching Jenkins instance..."
-docker run -d --name test_jenkins_instance --network jenkins_network jenkins_image
+docker run -d --name test_jenkins_instance --env-file .env_example --network jenkins_network "$DOCKERHUB_REPO":jenkins_image
 echo "Sleeping for 5 seconds before checking boot status..."
 sleep 5
 
 wait_for_jenkins_instance
 generate_crumb_and_token
 start_setup_dsl_job
-run_tests
+test_setup_dsl_job
+test_on_next_jenkins_build_pipeline

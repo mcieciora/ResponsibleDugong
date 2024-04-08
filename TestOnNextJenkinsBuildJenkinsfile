@@ -1,0 +1,25 @@
+def jenkinsImage
+
+pipeline {
+    agent any
+    environment {
+        REPO_URL = "https://github.com/mcieciora/ResponsibleDugong.git"
+    }
+    options {
+        skipDefaultCheckout()
+    }
+    stages {
+        stage ("Checkout branch") {
+            steps {
+                script {
+                    git branch: params.BRANCH, url: env.REPO_URL
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
