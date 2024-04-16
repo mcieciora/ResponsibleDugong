@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ./.env_example
+
 function generate_crumb_and_token() {
   echo "Sending crumb request..."
   CRUMB=$(curl "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar "$TOKEN_DIR/cookies.txt" --user "$JENKINS_USER:$JENKINS_PASSWORD")
@@ -38,25 +40,15 @@ function get_latest_version() {
   fi
 }
 
-function get_current_version() {
-  if [ ! -f "$OUTPUT_FILE" ]; then
-    generate_crumb_and_token
-  fi
-  TOKEN=$(jq -r ".data.tokenValue" "$OUTPUT_FILE")
-  echo "Token is: $TOKEN"
-  CURRENT_VERSION=$(curl "$JENKINS_URL" --user "$JENKINS_USER:$TOKEN" | grep 'X-Jenkins:' | awk '{print $2}')
-  echo "$CURRENT_VERSION"
-}
-
 
 EXIT_VAL=0
+CURRENT_VERSION=$1
 JENKINS_URL="$JENKINS_URL"
 JENKINS_USER="$JENKINS_ADMIN_USER"
 JENKINS_PASSWORD="$JENKINS_ADMIN_PASS"
 TOKEN_DIR="$TOKEN_DIR"
 OUTPUT_FILE="$TOKEN_DIR/token_data.json"
 
-CURRENT_VERSION=$(get_current_version)
 get_stable_version "$CURRENT_VERSION"
 get_latest_version "$CURRENT_VERSION"
 

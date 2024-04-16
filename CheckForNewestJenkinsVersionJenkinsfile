@@ -5,11 +5,14 @@ pipeline {
                 H 6 * * * %BRANCH=develop
         ''')
     }
+    environment {
+        CURRENT_VERSION="2.452"
+    }
     stages {
         stage("Check for Jenkins updates") {
             steps {
                 script {
-                    sh "chmod +x scripts/verify_jenkins_version.sh"
+                    sh "chmod +x scripts/verify_jenkins_version.sh ${env.CURRENT_VERSION}"
                     EXIT_CODE = sh(script: "scripts/verify_jenkins_version.sh", returnStatus: true)
                     if (EXIT_CODE == 2) {
                         unstable("There is new Jenkins version available.")
