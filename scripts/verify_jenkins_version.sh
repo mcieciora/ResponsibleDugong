@@ -27,6 +27,7 @@ function get_stable_version() {
 function get_latest_version() {
   echo "Getting last latest version..."
   LATEST=$(curl -L  https://updates.jenkins.io/current/latestCore.txt)
+  echo "$LATEST"
   printf '%s\n' "$LATEST" "$1" | sort -C -V
   RET_VAL=$?
   if [ $RET_VAL -ne 0 ]; then
