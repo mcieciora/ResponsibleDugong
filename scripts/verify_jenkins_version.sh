@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 function generate_crumb_and_token() {
   echo "Sending crumb request..."
   CRUMB=$(curl "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar "$TOKEN_DIR/cookies.txt" --user "$JENKINS_USER:$JENKINS_PASSWORD")
@@ -13,22 +11,29 @@ function generate_crumb_and_token() {
 }
 
 function get_stable_version() {
+  echo "Getting last stable version..."
   STABLE=$(curl -L  https://updates.jenkins.io/stable/latestCore.txt)
+  echo "$STABLE"
   printf '%s\n' "$STABLE" "$1" | sort -C -V
   RET_VAL=$?
   if [ $RET_VAL -ne 0 ]; then
     EXIT_VAL=2
     echo "Latest Jenkins stable version is $STABLE. Consider upgrading from $1"
+  else
+    echo "No newer stable version available."
   fi
 }
 
 function get_latest_version() {
+  echo "Getting last latest version..."
   LATEST=$(curl -L  https://updates.jenkins.io/current/latestCore.txt)
   printf '%s\n' "$LATEST" "$1" | sort -C -V
   RET_VAL=$?
   if [ $RET_VAL -ne 0 ]; then
     EXIT_VAL=2
     echo "$LATEST version is now available. Check it out: https://www.jenkins.io/changelog/$LATEST/"
+  else
+    echo "No newer latest version available."
   fi
 }
 
