@@ -12,10 +12,19 @@ pipeline {
         stage("Check for Jenkins updates") {
             steps {
                 script {
-                    sh "chmod +x scripts/verify_jenkins_version.sh"
-                    EXIT_CODE = sh(script: "scripts/verify_jenkins_version.sh ${env.CURRENT_VERSION}", returnStatus: true)
-                    if (EXIT_CODE == 2) {
-                        unstable("There is new Jenkins version available.")
+                    STABLE_VERSION = sh(script: "curl -L  https://updates.jenkins.io/stable/latestCore.txt", returnStdout: true)
+                    LATEST_VERSION = sh(script: "curl -L  https://updates.jenkins.io/current/latestCore.txt", returnStdout: true)
+
+                    currentBuild.description = "Current: ${CURRENT_VERSION}\nStable: ${STABLE_VERSION}\nLatest: ${LATEST_VERSION}"
+
+                    COMPARE_STABLE = sh(script: "printf '%s\n' $STABLE_VERSION $CURRENT_VERSION | sort -C -V", returnStatus: true)
+                    COMPARE_LATEST = sh(script: "printf '%s\n' $LATEST_VERSION $CURRENT_VERSION | sort -C -V", returnStatus: true)
+
+                    if (COMPARE_STABLE) {
+                        unstable("Latest Jenkins stable version is ${STABLE_VERSION}. Consider upgrading from ${CURRENT_VERSION}")
+                    }
+                    if (COMPARE_LATEST) {
+                        unstable("${LATEST_VERSION} version is now available. Check it out: https://www.jenkins.io/changelog/${LATEST_VERSION}/")
                     }
                 }
             }
