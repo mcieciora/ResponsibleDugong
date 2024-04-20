@@ -24,6 +24,7 @@ services:
       - service_network
   portainer:
     image: portainer/portainer-ce:latest
+    container_name: portainer
     ports:
       - "9443:9443"
     volumes:
