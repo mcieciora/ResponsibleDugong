@@ -9,6 +9,7 @@ services:
       - registry-volume:/var/lib/registry:rw
     networks:
       - service_network
+    restart: unless-stopped
   jenkins:
     image: mcieciora/responsible_dugong:latest
     container_name: jenkins
@@ -22,6 +23,7 @@ services:
       - .env_example
     networks:
       - service_network
+    restart: unless-stopped
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
