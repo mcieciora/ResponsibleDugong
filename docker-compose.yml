@@ -9,6 +9,7 @@ services:
       - registry-volume:/var/lib/registry:rw
     networks:
       - service_network
+    restart: unless-stopped
   jenkins:
     image: mcieciora/responsible_dugong:latest
     container_name: jenkins
@@ -22,9 +23,19 @@ services:
       - .env_example
     networks:
       - service_network
+    restart: unless-stopped
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - "9443:9443"
+    volumes:
+      - portainer-volume:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
 networks:
   service_network:
       name: jenkins_network
 volumes:
-  jenkins-volume:
   registry-volume:
+  portainer-volume:
