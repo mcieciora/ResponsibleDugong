@@ -6,7 +6,7 @@ pipeline {
         ''')
     }
     environment {
-        CURRENT_VERSION="2.454"
+        CURRENT_VERSION="2.455"
     }
     stages {
         stage("Check for Jenkins updates") {
