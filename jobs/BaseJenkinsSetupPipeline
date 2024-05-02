@@ -1,7 +1,4 @@
 pipelineJob("BaseJenkinsSetupPipeline") {
-    parameters {
-        booleanParam("OVERWRITE", false, "If true all existing keys will be overwritten.")
-    }
     definition {
         cpsScm {
             scm {

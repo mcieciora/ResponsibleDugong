@@ -32,12 +32,12 @@ function add_credentials() {
         "username":"jenkins_server",
         "privateKeySource":{
            "value":"0",
-           "privateKey":"$(cat /d/repos/ResponsibleDugong/.ssh_keys/id_ed25519)",
-           "stapler-class":"com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey\$DirectEntryPrivateKeySource",
-           "\$class":"com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey\$DirectEntryPrivateKeySource"
+           "privateKey":'"$(cat /d/repos/ResponsibleDugong/.ssh_keys/id_ed25519)"',
+           "stapler-class":"com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource",
+           "\$class":"com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource"
         },
         "passphrase":"",
-        "\$class":"com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey"
+        "$class":"com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey"
      }
   }'
 }
