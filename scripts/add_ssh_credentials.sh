@@ -1,8 +1,6 @@
 #!/bin/bash
 
 set -e
-source $(pwd)/.env_example
-
 
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
