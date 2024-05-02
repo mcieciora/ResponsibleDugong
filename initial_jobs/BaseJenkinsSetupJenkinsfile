@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     sh "cat /root/.ssh/id_ed25519.pub"
-                    def githubKeysAdded = input(id: "github_keys_added", message: "Copy shown public key to SSH keys in your GitHub account.")
+                    def githubKeysAdded = input(id: "github_keys_added", message: "Copy shown public key to SSH keys on your GitHub account.")
                 }
             }
         }
