@@ -9,7 +9,7 @@ pipelineJob("BaseJenkinsSetupPipeline") {
                     branch('*/feature/base_jenkins_setup_job')
                 }
             }
-            scriptPath("BaseJenkinsSetupJenkinsfile")
+            scriptPath("initial_jobs/BaseJenkinsSetupJenkinsfile")
             lightweight()
         }
     }
