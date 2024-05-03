@@ -6,7 +6,7 @@ pipelineJob("BaseJenkinsSetupPipeline") {
                     remote {
                         url("https://github.com/mcieciora/ResponsibleDugong.git")
                     }
-                    branch('*/feature/base_jenkins_setup_job')
+                    branch('*/develop')
                 }
             }
             scriptPath("initial_jobs/BaseJenkinsSetupJenkinsfile")
