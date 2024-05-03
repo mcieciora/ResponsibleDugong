@@ -99,6 +99,14 @@ function test_on_next_jenkins_build_pipeline() {
   fi
 }
 
+function run_release_tests() {
+  if [ "$RELEASE_BUILD" ]; then
+    echo "Running release testing."
+  else
+    echo "Skipping release testing."
+  fi
+}
+
 echo "Launching Jenkins instance..."
 docker run -d --name test_jenkins_instance --env-file .env_example --network jenkins_network "$DOCKERHUB_REPO":jenkins_image
 echo "Sleeping for 5 seconds before checking boot status..."
@@ -109,3 +117,4 @@ generate_crumb_and_token
 start_setup_dsl_job
 test_setup_dsl_job
 test_on_next_jenkins_build_pipeline
+run_release_tests
