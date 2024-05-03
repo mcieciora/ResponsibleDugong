@@ -45,8 +45,8 @@ function start_setup_dsl_job() {
 }
 
 function test_setup_dsl_job() {
-  EXPECTED_JOBS_ARRAY=("SetupDSLJobs" "PythonDependenciesVerification_CarelessVaquita"  "MultibranchPipeline_CarelessVaquita"
-  "ScanDockerImages_CarelessVaquita" "ParametrizedTestPipeline_CarelessVaquita")
+  EXPECTED_JOBS_ARRAY=("SetupDSLJobs" "BaseJenkinsSetupPipeline" "PythonDependenciesVerification_CarelessVaquita"
+  "MultibranchPipeline_CarelessVaquita" "ScanDockerImages_CarelessVaquita" "ParametrizedTestPipeline_CarelessVaquita")
   echo "Getting list of all jobs..."
   MAIN_PAGE=$(curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$MAIN_PAGE" > "main_page.json"
