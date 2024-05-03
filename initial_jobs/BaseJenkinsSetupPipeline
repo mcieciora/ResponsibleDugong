@@ -1,0 +1,19 @@
+pipelineJob("BaseJenkinsSetupPipeline") {
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("https://github.com/mcieciora/ResponsibleDugong.git")
+                    }
+                    branch('*/develop')
+                }
+            }
+            scriptPath("initial_jobs/BaseJenkinsSetupJenkinsfile")
+            lightweight()
+        }
+    }
+    logRotator {
+        daysToKeep(31)
+    }
+}

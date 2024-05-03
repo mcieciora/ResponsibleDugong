@@ -15,7 +15,7 @@ pipelineJob("SetupDSLJobs") {
                     branch("*/develop")
                 }
             }
-            scriptPath("initial_jobs/SetupDSLJobs.Jenkinsfile")
+            scriptPath("initial_jobs/SetupDSLJobsJenkinsfile")
             lightweight()
         }
     }
