@@ -2,12 +2,12 @@
 
 RETURN_VALUE=0
 
-echo "Running docker scout on $TESTED_IMAGE"
-docker run --rm -e DOCKER_SCOUT_HUB_USER="$USERNAME" -e DOCKER_SCOUT_HUB_PASSWORD="$PASSWORD" -u root -v /var/run/docker.sock:/var/run/docker.sock docker/scout-cli:1.10.0 cves "$TESTED_IMAGE" --exit-code --only-severity critical,high
+echo "Running docker scout on $DOCKERHUB_REPO"
+docker run --rm -e DOCKER_SCOUT_HUB_USER="$USERNAME" -e DOCKER_SCOUT_HUB_PASSWORD="$PASSWORD" -u root -v /var/run/docker.sock:/var/run/docker.sock docker/scout-cli:1.10.0 cves "$DOCKERHUB_REPO" --exit-code --only-severity critical,high
 SCAN_RESULT=$?
 if [ "$SCAN_RESULT" -ne 0 ]; then
   echo "Vulnerabilities found. Running recommendations"
-  docker run --rm -e DOCKER_SCOUT_HUB_USER="$USERNAME" -e DOCKER_SCOUT_HUB_PASSWORD="$PASSWORD" -u root -v /var/run/docker.sock:/var/run/docker.sock docker/scout-cli:1.10.0 recommendations "$TESTED_IMAGE" > scan_jenkins.txt
+  docker run --rm -e DOCKER_SCOUT_HUB_USER="$USERNAME" -e DOCKER_SCOUT_HUB_PASSWORD="$PASSWORD" -u root -v /var/run/docker.sock:/var/run/docker.sock docker/scout-cli:1.10.0 recommendations "$DOCKERHUB_REPO" > scan_jenkins.txt
   grep "This image version is up to date" scan_jenkins.txt
   IMAGE_UP_TO_DATE=$?
   grep "There are no tag recommendations at this time" scan_jenkins.txt
