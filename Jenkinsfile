@@ -9,7 +9,7 @@ pipeline {
         stage ("Build Jenkins image") {
             steps {
                 script {
-                    jenkinsImage = docker.build("${IMAGE_TAG}")
+                    jenkinsImage = docker.build("${TESTED_IMAGE}")
                 }
             }
         }
@@ -55,7 +55,7 @@ pipeline {
         always {
             sh "docker stop test_jenkins_instance"
             sh "docker container rm test_jenkins_instance"
-            sh "docker rmi ${IMAGE_TAG}"
+            sh "docker rmi ${TESTED_IMAGE}"
             cleanWs()
         }
     }
