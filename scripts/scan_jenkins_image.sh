@@ -1,7 +1,7 @@
 #!/bin/bash
 
 RETURN_VALUE=0
-TESTED_IMAGE="test_jenkins_image"
+TESTED_IMAGE="test_jenkins_image:latest"
 
 echo "Running docker scout on $TESTED_IMAGE"
 docker run --rm -e DOCKER_SCOUT_HUB_USER="$USERNAME" -e DOCKER_SCOUT_HUB_PASSWORD="$PASSWORD" -v /var/run/docker.sock:/var/run/docker.sock docker/scout-cli:1.10.0 cves "$TESTED_IMAGE" --exit-code --only-severity critical,high
