@@ -3,13 +3,13 @@ def jenkinsImage
 pipeline {
     agent any
     environment {
-        DOCKERHUB_REPO = "mcieciora/responsible_dugong"
+        IMAGE_TAG = "test_jenkins_image"
     }
     stages {
         stage ("Build Jenkins image") {
             steps {
                 script {
-                    jenkinsImage = docker.build("${DOCKERHUB_REPO}:jenkins_image")
+                    jenkinsImage = docker.build("${IMAGE_TAG}")
                 }
             }
         }
@@ -55,7 +55,7 @@ pipeline {
         always {
             sh "docker stop test_jenkins_instance"
             sh "docker container rm test_jenkins_instance"
-            sh "docker rmi ${DOCKERHUB_REPO}:jenkins_image"
+            sh "docker rmi ${IMAGE_TAG}"
             cleanWs()
         }
     }
