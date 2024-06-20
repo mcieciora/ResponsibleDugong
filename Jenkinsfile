@@ -4,6 +4,7 @@ pipeline {
     agent any
     environment {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
+        SCOUT_VERSION = "1.10.0"
     }
     stages {
         stage ("Build Jenkins image") {
