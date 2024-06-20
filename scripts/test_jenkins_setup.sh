@@ -100,7 +100,7 @@ function test_on_next_jenkins_build_pipeline() {
 }
 
 echo "Launching Jenkins instance..."
-docker run -d --name test_jenkins_instance --env-file .env_example --network jenkins_network "$DOCKERHUB_REPO":jenkins_image
+docker run -d --name test_jenkins_instance --env-file .env_example --network jenkins_network "$TESTED_IMAGE"
 echo "Sleeping for 5 seconds before checking boot status..."
 sleep 5
 

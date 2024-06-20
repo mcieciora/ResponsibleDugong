@@ -3,7 +3,7 @@ def jenkinsImage
 pipeline {
     agent any
     environment {
-        IMAGE_TAG = "test_jenkins_image:latest"
+        TESTED_IMAGE = "test_jenkins_image:latest"
     }
     stages {
         stage ("Build Jenkins image") {
