@@ -4,12 +4,13 @@ pipeline {
     agent any
     environment {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
+        SCOUT_VERSION = "1.10.0"
     }
     stages {
         stage ("Build Jenkins image") {
             steps {
                 script {
-                    jenkinsImage = docker.build("${DOCKERHUB_REPO}:jenkins_image")
+                    jenkinsImage = docker.build("${DOCKERHUB_REPO}")
                 }
             }
         }
@@ -55,7 +56,7 @@ pipeline {
         always {
             sh "docker stop test_jenkins_instance"
             sh "docker container rm test_jenkins_instance"
-            sh "docker rmi ${DOCKERHUB_REPO}:jenkins_image"
+            sh "docker rmi ${DOCKERHUB_REPO}"
             cleanWs()
         }
     }
