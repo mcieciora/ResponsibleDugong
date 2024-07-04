@@ -1,5 +1,3 @@
-def jenkinsImage
-
 pipeline {
     agent any
     environment {
@@ -10,7 +8,7 @@ pipeline {
         stage ("Build Jenkins image") {
             steps {
                 script {
-                    jenkinsImage = docker.build("${DOCKERHUB_REPO}")
+                    sh "docker build -t test_image ."
                 }
             }
         }
@@ -39,13 +37,18 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry("", "dockerhub_id") {
-                        def curDate = new Date().format("yyMMdd-HHmm", TimeZone.getTimeZone("UTC"))
-                        jenkinsImage.push("test-${curDate}")
                         if (env.BRANCH_NAME == "develop") {
-                            jenkinsImage.push("develop")
+                            sh "docker tag -t test_image $DOCKERHUB_REPO:develop"
+                            sh "docker push $DOCKERHUB_REPO:develop"
                         }
-                        if (env.BRANCH_NAME == "master") {
-                            jenkinsImage.push("latest")
+                        else if (env.BRANCH_NAME == "master") {
+                            sh "docker tag -t test_image $DOCKERHUB_REPO:latest"
+                            sh "docker push $DOCKERHUB_REPO:latest"
+                        }
+                        else {
+                            def curDate = new Date().format("yyMMdd-HHmm", TimeZone.getTimeZone("UTC"))
+                            sh "docker tag -t test_image $DOCKERHUB_REPO:test-${curDate}"
+                            sh "docker push $DOCKERHUB_REPO:test-${curDate}"
                         }
                     }
                 }
