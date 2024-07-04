@@ -1,9 +1,7 @@
 pipeline {
     agent any
     triggers {
-        parameterizedCron('''
-                H 6 * * * %BRANCH=develop
-        ''')
+        cron("H 6 * * *")
     }
     environment {
         CURRENT_VERSION="2.463"
