@@ -1,16 +1,15 @@
-def jenkinsImage
-
 pipeline {
     agent any
     environment {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
+        DOCKERHUB_TAG = "no_tag"
         SCOUT_VERSION = "1.10.0"
     }
     stages {
         stage ("Build Jenkins image") {
             steps {
                 script {
-                    jenkinsImage = docker.build("${DOCKERHUB_REPO}")
+                    sh "docker build -t jenkins_test_image ."
                 }
             }
         }
@@ -39,14 +38,19 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry("", "dockerhub_id") {
-                        def curDate = new Date().format("yyMMdd-HHmm", TimeZone.getTimeZone("UTC"))
-                        jenkinsImage.push("test-${curDate}")
                         if (env.BRANCH_NAME == "develop") {
-                            jenkinsImage.push("develop")
+                            DOCKERHUB_TAG = "develop"
+
                         }
-                        if (env.BRANCH_NAME == "master") {
-                            jenkinsImage.push("latest")
+                        else if (env.BRANCH_NAME == "master") {
+                            DOCKERHUB_TAG = "latest"
                         }
+                        else {
+                            def curDate = new Date().format("yyMMdd-HHmm", TimeZone.getTimeZone("UTC"))
+                            DOCKERHUB_TAG = "test-${curDate}"
+                        }
+                        sh "docker tag jenkins_test_image ${DOCKERHUB_REPO}:${DOCKERHUB_TAG}"
+                        sh "docker push ${DOCKERHUB_REPO}:${DOCKERHUB_TAG}"
                     }
                 }
             }
@@ -56,7 +60,8 @@ pipeline {
         always {
             sh "docker stop test_jenkins_instance"
             sh "docker container rm test_jenkins_instance"
-            sh "docker rmi ${DOCKERHUB_REPO}"
+            sh "docker rmi jenkins_test_image"
+            sh "docker rmi ${DOCKERHUB_REPO}:${DOCKERHUB_TAG}"
             cleanWs()
         }
     }
