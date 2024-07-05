@@ -59,6 +59,7 @@ pipeline {
     post {
         always {
             sh "docker stop test_jenkins_instance"
+            sh "docker container rm test_jenkins_instance"
             sh "docker rmi jenkins_test_image"
             sh "docker rmi ${DOCKERHUB_REPO}:${DOCKERHUB_TAG}"
             cleanWs()
