@@ -2,13 +2,14 @@ pipeline {
     agent any
     environment {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
+        DOCKERHUB_TAG = "no_tag"
         SCOUT_VERSION = "1.10.0"
     }
     stages {
         stage ("Build Jenkins image") {
             steps {
                 script {
-                    sh "docker build -t test_image ."
+                    sh "docker build -t jenkins_test_image ."
                 }
             }
         }
@@ -38,18 +39,18 @@ pipeline {
                 script {
                     docker.withRegistry("", "dockerhub_id") {
                         if (env.BRANCH_NAME == "develop") {
-                            sh "docker tag -t test_image $DOCKERHUB_REPO:develop"
-                            sh "docker push $DOCKERHUB_REPO:develop"
+                            DOCKERHUB_TAG = "develop"
+
                         }
                         else if (env.BRANCH_NAME == "master") {
-                            sh "docker tag -t test_image $DOCKERHUB_REPO:latest"
-                            sh "docker push $DOCKERHUB_REPO:latest"
+                            DOCKERHUB_TAG = "latest"
                         }
                         else {
                             def curDate = new Date().format("yyMMdd-HHmm", TimeZone.getTimeZone("UTC"))
-                            sh "docker tag -t test_image $DOCKERHUB_REPO:test-${curDate}"
-                            sh "docker push $DOCKERHUB_REPO:test-${curDate}"
+                            DOCKERHUB_TAG = "test-${curDate}"
                         }
+                        sh "docker tag jenkins_test_image ${DOCKERHUB_REPO}:${DOCKERHUB_TAG}"
+                        sh "docker push ${DOCKERHUB_REPO}:${DOCKERHUB_TAG}"
                     }
                 }
             }
@@ -58,8 +59,8 @@ pipeline {
     post {
         always {
             sh "docker stop test_jenkins_instance"
-            sh "docker container rm test_jenkins_instance"
-            sh "docker rmi ${DOCKERHUB_REPO}"
+            sh "docker rmi jenkins_test_image"
+            sh "docker rmi ${DOCKERHUB_REPO}:${DOCKERHUB_TAG}"
             cleanWs()
         }
     }

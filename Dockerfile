@@ -1,4 +1,4 @@
-FROM --platform="${TARGETPLATFORM:-linux/arm64}" jenkins/jenkins:2.463-alpine
+FROM jenkins/jenkins:2.463-alpine
 
 USER root
 
