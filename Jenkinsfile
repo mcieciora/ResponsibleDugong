@@ -9,15 +9,7 @@ pipeline {
         stage ("Build Jenkins image") {
             steps {
                 script {
-<<<<<<< HEAD
-<<<<<<< HEAD
                     sh "docker build -t jenkins_test_image ."
-=======
-                    sh "docker build -t test_image ."
->>>>>>> 788730f (04072024-0924)
-=======
-                    sh "docker build -t jenkins_test_image ."
->>>>>>> fca9966 (05072024-1145)
                 }
             }
         }
