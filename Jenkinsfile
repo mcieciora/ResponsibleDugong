@@ -37,7 +37,7 @@ pipeline {
         stage ("Run app & health check") {
             steps {
                 script {
-                    sh "chmod +x tools/shell_scripts/app_health_check.sh"
+                    sh "chmod +x scripts/app_health_check.sh"
                     sh "scripts/app_health_check.sh 30 7"
                 }
             }
