@@ -1,7 +1,7 @@
 services:
   registry:
     image: registry:2
-    container_name: registry
+    container_name: rd_registry
     ports:
       - "5000:5000"
     volumes:
@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
   jenkins:
     image: mcieciora/responsible_dugong:latest
-    container_name: jenkins
+    container_name: rd_jenkins
     ports:
       - "8080:8080"
       - "50000:50000"
@@ -20,13 +20,13 @@ services:
       - .ssh_keys:/root/.ssh
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
-      - .env_example
+      - .env
     networks:
       - service_network
     restart: unless-stopped
   portainer:
     image: portainer/portainer-ce:latest
-    container_name: portainer
+    container_name: rd_portainer
     ports:
       - "9443:9443"
     volumes:
@@ -35,7 +35,7 @@ services:
     restart: unless-stopped
   app:
     image: mcieciora/exultant_rhino:app_latest
-    container_name: exultant_rhino_app
+    container_name: rd_exultant_rhino_app
     ports:
       - "8501:8501"
     env_file:
@@ -45,7 +45,7 @@ services:
     restart: unless-stopped
   api:
     image: mcieciora/exultant_rhino:api_latest
-    container_name: exultant_rhino_api
+    container_name: rd_exultant_rhino_api
     ports:
       - "8500:8500"
     env_file:
@@ -55,7 +55,7 @@ services:
     restart: unless-stopped
   db:
     image: postgres
-    container_name: postgres
+    container_name: rd_postgres
     ports:
       - "5432:5432"
     env_file:
@@ -66,7 +66,7 @@ services:
       - service_network
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin4
+    container_name: rd_pgadmin4
     ports:
       - "8888:80"
     env_file:
