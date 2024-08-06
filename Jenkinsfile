@@ -34,6 +34,14 @@ pipeline {
                 }
             }
         }
+        stage ("Run app & health check") {
+            steps {
+                script {
+                    sh "chmod +x tools/shell_scripts/app_health_check.sh"
+                    sh "scripts/app_health_check.sh 30 7"
+                }
+            }
+        }
         stage ("Push image") {
             steps {
                 script {
@@ -60,8 +68,7 @@ pipeline {
         always {
             sh "docker stop test_jenkins_instance"
             sh "docker container rm test_jenkins_instance"
-            sh "docker rmi jenkins_test_image"
-            sh "docker rmi ${DOCKERHUB_REPO}:${DOCKERHUB_TAG}"
+            sh "docker compose down --rmi all -v"
             cleanWs()
         }
     }
