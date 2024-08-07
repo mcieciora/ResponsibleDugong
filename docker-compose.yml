@@ -5,13 +5,13 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - registry-volume:/var/lib/registry:rw
+      - rd-registry-volume:/var/lib/registry:rw
     networks:
       - service_network
     restart: unless-stopped
   jenkins:
     image: mcieciora/responsible_dugong:latest
-    container_name: rd_jenkins
+    container_name: jenkins
     ports:
       - "8080:8080"
       - "50000:50000"
@@ -30,7 +30,7 @@ services:
     ports:
       - "9443:9443"
     volumes:
-      - portainer-volume:/data
+      - rd-portainer-volume:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
   app:
@@ -61,7 +61,7 @@ services:
     env_file:
       - .env
     volumes:
-      - postgres-volume:/var/lib/postgresql/data
+      - rd-postgres-volume:/var/lib/postgresql/data
     networks:
       - service_network
   pgadmin:
@@ -72,12 +72,12 @@ services:
     env_file:
       - .env
     volumes:
-      - pgadmin-volume:/var/lib/pgadmin
+      - rd-pgadmin-volume:/var/lib/pgadmin
 networks:
   service_network:
       name: jenkins_network
 volumes:
-  registry-volume:
-  portainer-volume:
-  postgres-volume:
-  pgadmin-volume:
+  rd-registry-volume:
+  rd-portainer-volume:
+  rd-postgres-volume:
+  rd-pgadmin-volume:
