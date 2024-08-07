@@ -1,12 +1,11 @@
-version: '3.8'
 services:
   registry:
     image: registry:2
-    container_name: registry
+    container_name: rd_registry
     ports:
       - "5000:5000"
     volumes:
-      - registry-volume:/var/lib/registry:rw
+      - rd-registry-volume:/var/lib/registry:rw
     networks:
       - service_network
     restart: unless-stopped
@@ -21,22 +20,64 @@ services:
       - .ssh_keys:/root/.ssh
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
-      - .env_example
+      - .env
     networks:
       - service_network
     restart: unless-stopped
   portainer:
     image: portainer/portainer-ce:latest
-    container_name: portainer
+    container_name: rd_portainer
     ports:
       - "9443:9443"
     volumes:
-      - portainer-volume:/data
+      - rd-portainer-volume:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
+  app:
+    image: mcieciora/exultant_rhino:app_latest
+    container_name: rd_exultant_rhino_app
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    networks:
+      - service_network
+    restart: unless-stopped
+  api:
+    image: mcieciora/exultant_rhino:api_latest
+    container_name: rd_exultant_rhino_api
+    ports:
+      - "8500:8500"
+    env_file:
+      - .env
+    networks:
+      - service_network
+    restart: unless-stopped
+  db:
+    image: postgres
+    container_name: rd_postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - rd-postgres-volume:/var/lib/postgresql/data
+    networks:
+      - service_network
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: rd_pgadmin4
+    ports:
+      - "8888:80"
+    env_file:
+      - .env
+    volumes:
+      - rd-pgadmin-volume:/var/lib/pgadmin
 networks:
   service_network:
       name: jenkins_network
 volumes:
-  registry-volume:
-  portainer-volume:
+  rd-registry-volume:
+  rd-portainer-volume:
+  rd-postgres-volume:
+  rd-pgadmin-volume:
