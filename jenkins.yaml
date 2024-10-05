@@ -26,7 +26,7 @@ jenkins:
               - user: ${JENKINS_ADMIN_USER}
 jobs:
   - file: /root/casc/initial_jobs/SetupDSLJobs
-  - file: /root/casc/initial_jobs/BaseJenkinsSetupPipeline
+  - file: /root/casc/initial_jobs/NodeSetupPipeline
 security:
   globalJobDslSecurityConfiguration:
     useScriptSecurity: false
