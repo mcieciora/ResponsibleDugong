@@ -1,4 +1,7 @@
-pipelineJob("BaseJenkinsSetupPipeline") {
+pipelineJob("NodeSetupPipeline") {
+    parameters {
+        stringParam("AGENT_NAME", "master", "Node name or label.")
+    }
     definition {
         cpsScm {
             scm {
@@ -9,7 +12,7 @@ pipelineJob("BaseJenkinsSetupPipeline") {
                     branch('*/develop')
                 }
             }
-            scriptPath("initial_jobs/BaseJenkinsSetupJenkinsfile")
+            scriptPath("initial_jobs/NodeSetupJenkinsfile")
             lightweight()
         }
     }

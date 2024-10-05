@@ -2,6 +2,8 @@
 
 set -e
 
+NODE_NAME=$1
+
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
   JENKINS_USER="$JENKINS_ADMIN_USER"
@@ -24,7 +26,7 @@ function add_credentials() {
      "":"2",
      "credentials":{
         "scope":"GLOBAL",
-        "id":"github_id",
+        "id":"github_$NODE_NAME",
         "description":"",
         "username":"jenkins_server",
         "privateKeySource":{
