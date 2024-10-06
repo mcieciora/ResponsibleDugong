@@ -1,0 +1,28 @@
+pipeline {
+    agent {
+        label "master"
+    }
+    stages {
+        stage ("Generate CRUMB") {
+            steps {
+                script {
+                    sh "chmod +x scripts/add_ssh_credentials.sh"
+                    sh "scripts/add_ssh_credentials.sh"
+                }
+            }
+        }
+        stage ("Copy token.sec value") {
+            steps {
+                script {
+                    sh "cat token.sec"
+                    def githubKeysAdded = input(id: "copy_token_sec_value", message: "Copy shown token. It will be required for any administrative tasks.")
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}

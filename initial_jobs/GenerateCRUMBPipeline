@@ -1,8 +1,4 @@
-pipelineJob("NodeSetupPipeline") {
-    parameters {
-        stringParam("AGENT_NAME", "master", "Node name or label.")
-        string("TOKEN", "", "Provide CRUMB token.")
-    }
+pipelineJob("GenerateCRUMBPipeline") {
     definition {
         cpsScm {
             scm {
@@ -13,11 +9,11 @@ pipelineJob("NodeSetupPipeline") {
                     branch('*/feature/multiple_node_setup')
                 }
             }
-            scriptPath("initial_jobs/NodeSetupJenkinsfile")
+            scriptPath("initial_jobs/GenerateCRUMBJenkinsfile")
             lightweight()
         }
     }
     logRotator {
-        daysToKeep(31)
+        daysToKeep(1)
     }
 }
