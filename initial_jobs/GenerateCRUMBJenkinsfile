@@ -6,8 +6,8 @@ pipeline {
         stage ("Generate CRUMB") {
             steps {
                 script {
-                    sh "chmod +x scripts/add_ssh_credentials.sh"
-                    sh "scripts/add_ssh_credentials.sh"
+                    sh "chmod +x scripts/generate_crumb.sh"
+                    sh "scripts/generate_crumb.sh"
                 }
             }
         }

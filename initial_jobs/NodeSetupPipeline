@@ -1,7 +1,7 @@
 pipelineJob("NodeSetupPipeline") {
     parameters {
         stringParam("AGENT_NAME", "master", "Node name or label.")
-        string("TOKEN", "", "Provide CRUMB token.")
+        stringParam("TOKEN", "", "Provide CRUMB token.")
     }
     definition {
         cpsScm {

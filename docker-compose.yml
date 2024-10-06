@@ -10,13 +10,14 @@ services:
       - service_network
     restart: unless-stopped
   jenkins:
-    image: mcieciora/responsible_dugong:latest
+    build:
+      context: .
     container_name: jenkins
     ports:
       - "8080:8080"
       - "50000:50000"
     volumes:
-      - .jenkins_volume:/var/jenkins_home
+      - .test_jenkins_volume:/var/jenkins_home
       - .ssh_keys:/root/.ssh
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
