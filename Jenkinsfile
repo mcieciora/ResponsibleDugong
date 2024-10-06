@@ -3,13 +3,13 @@ pipeline {
     environment {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
         DOCKERHUB_TAG = "no_tag"
-        SCOUT_VERSION = "1.10.0"
+        SCOUT_VERSION = "1.14.0"
     }
     stages {
         stage ("Build Jenkins image") {
             steps {
                 script {
-                    sh "docker build -t jenkins_test_image ."
+                    sh "docker build --no-cache -t jenkins_test_image ."
                 }
             }
         }

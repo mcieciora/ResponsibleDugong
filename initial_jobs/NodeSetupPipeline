@@ -10,7 +10,7 @@ pipelineJob("NodeSetupPipeline") {
                     remote {
                         url("https://github.com/mcieciora/ResponsibleDugong.git")
                     }
-                    branch('*/feature/multiple_node_setup')
+                    branch('*/develop')
                 }
             }
             scriptPath("initial_jobs/NodeSetupJenkinsfile")
