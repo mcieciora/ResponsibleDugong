@@ -4,13 +4,11 @@ set -e
 
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
-  JENKINS_USER="$JENKINS_ADMIN_USER"
-  JENKINS_PASSWORD="$JENKINS_ADMIN_PASS"
   echo "Sending crumb request..."
-  CRUMB=$(curl "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar cookies.txt --user "$JENKINS_USER:$JENKINS_PASSWORD")
+  CRUMB=$(curl "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar cookies.txt --user "$JENKINS_ADMIN_USER:$JENKINS_PASSWORD")
   echo "Using crumb to get API token..."
-  TOKEN_DATA=$(curl "$JENKINS_URL/user/$JENKINS_USER/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken" \
-  --user "$JENKINS_USER:$JENKINS_PASSWORD" --data "newTokenName=jenkins-token" --cookie cookies.txt -H "$CRUMB")
+  TOKEN_DATA=$(curl "$JENKINS_URL/user/$JENKINS_ADMIN_USER/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken" \
+  --user "$JENKINS_ADMIN_USER:$JENKINS_ADMIN_PASS" --data "newTokenName=jenkins-token" --cookie cookies.txt -H "$CRUMB")
   echo "$TOKEN_DATA"
   echo "Saving acquired API token..."
   echo "$TOKEN_DATA" > "$OUTPUT_FILE"
@@ -20,7 +18,7 @@ function generate_crumb_and_token() {
 
 function add_credentials() {
   echo "Creating SSH credentials"
-  curl -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" --user "$JENKINS_USER:$TOKEN" \
+  curl -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" --user "$JENKINS_ADMIN_USER:$TOKEN" \
   --data-urlencode 'json={
      "":"2",
      "credentials":{
