@@ -2,6 +2,9 @@ pipeline {
     agent {
         label "master"
     }
+    parameters {
+        booleanParam(name: "SAVE_TOKEN_AS_SECRET", defaultValue: true, description: "Save token as Jenkins secret. If false value will be printed out to console.\nKeep token in safe place as it may be required for administrative tasks.")
+    }
     stages {
         stage ("Generate CRUMB") {
             steps {

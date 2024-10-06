@@ -1,4 +1,7 @@
 pipelineJob("GenerateCRUMBPipeline") {
+    parameters {
+        booleanParam("SAVE_TOKEN_AS_SECRET", true, "Save token as Jenkins secret. If false value will be printed out to console.\nKeep token in safe place as it may be required for administrative tasks.")
+    }
     definition {
         cpsScm {
             scm {
