@@ -4,20 +4,25 @@ pipeline {
         cron("H 6 * * *")
     }
     environment {
-        CURRENT_VERSION="2.474"
+        AVAILABLE_VERSION="2.474"
     }
     stages {
         stage("Check for Jenkins updates") {
             steps {
                 script {
+                    CURRENT_VERSION = env.JENKINS_VERSION
                     STABLE_VERSION = sh(script: "curl -L  https://updates.jenkins.io/stable/latestCore.txt", returnStdout: true)
                     LATEST_VERSION = sh(script: "curl -L  https://updates.jenkins.io/current/latestCore.txt", returnStdout: true)
 
-                    currentBuild.description = "Current: ${CURRENT_VERSION}\nStable: ${STABLE_VERSION}\nLatest: ${LATEST_VERSION}"
+                    currentBuild.description = "Current: ${CURRENT_VERSION}\nAvailable: ${AVAILABLE_VERSION}\nStable: ${STABLE_VERSION}\nLatest: ${LATEST_VERSION}"
 
-                    COMPARE_STABLE = sh(script: "printf '%s\n' $STABLE_VERSION $CURRENT_VERSION | sort -C -V", returnStatus: true)
-                    COMPARE_LATEST = sh(script: "printf '%s\n' $LATEST_VERSION $CURRENT_VERSION | sort -C -V", returnStatus: true)
+                    COMPARE_CURRENT = sh(script: "printf '%s\n' $AVAILABLE_VERSION $CURRENT_VERSION | sort -C -V", returnStatus: true)
+                    COMPARE_STABLE = sh(script: "printf '%s\n' $STABLE_VERSION $AVAILABLE_VERSION | sort -C -V", returnStatus: true)
+                    COMPARE_LATEST = sh(script: "printf '%s\n' $LATEST_VERSION $AVAILABLE_VERSION | sort -C -V", returnStatus: true)
 
+                    if (COMPARE_CURRENT) {
+                        unstable("Current Jenkins instance version is not up to date with latest available for ResponsibleDugong. Consider rebuilding with docker compose up -d --build")
+                    }
                     if (COMPARE_STABLE) {
                         unstable("Latest Jenkins stable version is ${STABLE_VERSION}. Consider upgrading from ${CURRENT_VERSION}")
                     }

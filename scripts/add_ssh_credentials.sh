@@ -2,8 +2,6 @@
 
 set -e
 
-NODE_NAME=$1
-
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
   JENKINS_USER="$JENKINS_ADMIN_USER"
@@ -13,6 +11,7 @@ function generate_crumb_and_token() {
   echo "Using crumb to get API token..."
   TOKEN_DATA=$(curl "$JENKINS_URL/user/$JENKINS_USER/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken" \
   --user "$JENKINS_USER:$JENKINS_PASSWORD" --data "newTokenName=jenkins-token" --cookie cookies.txt -H "$CRUMB")
+  echo "$TOKEN_DATA"
   echo "Saving acquired API token..."
   echo "$TOKEN_DATA" > "$OUTPUT_FILE"
   TOKEN=$(jq -r ".data.tokenValue" "$OUTPUT_FILE")
@@ -26,7 +25,7 @@ function add_credentials() {
      "":"2",
      "credentials":{
         "scope":"GLOBAL",
-        "id":"github_$NODE_NAME",
+        "id":"github_$1",
         "description":"",
         "username":"jenkins_server",
         "privateKeySource":{
