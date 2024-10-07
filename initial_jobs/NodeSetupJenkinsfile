@@ -1,23 +1,21 @@
 pipeline {
     agent {
-        label params.AGENT_NAME
-    }
-    environment {
-        CURRENT_USER = sh(script: "whoami", returnStdout: true).trim()
-        HOME_PATH = "${env.CURRENT_USER == "root" ? "/root" : "/home/${env.CURRENT_USER}"}"
+        label "master"
     }
     parameters {
         string(name: "AGENT_NAME", defaultValue: "master", description: "Node name or label.")
         string(name: "TOKEN", defaultValue: "", description: "Provide CRUMB token.")
     }
+    environment {
+        SSH_PATH="/var/jenkins_home/ssh_keys/${params.AGENT_NAME}"
+    }
     stages {
         stage ("Check for existing keys") {
             steps {
                 script {
-                    println("Running as ${CURRENT_USER}")
-                    SSH_KEYS_EXIST = sh(script: "test ! -f ${env.HOME_PATH}/.ssh/id_ed25519.pub && test ! -f ${env.HOME_PATH}/.ssh/id_ed25519", returnStatus: true)
+                    SSH_KEYS_EXIST = sh(script: "test ! -f ${env.SSH_PATH}/id_ed25519.pub && test ! -f ${env.SSH_PATH}/id_ed25519", returnStatus: true)
                     if (SSH_KEYS_EXIST) {
-                        error("Keys are already available in ${env.HOME_PATH}/.ssh. If you want to generate new pair remove them from .ssh_keys directory.")
+                        error("Keys for ${params.AGENT_NAME} are already available in. If you want to generate new pair remove agent directory.")
                     }
                 }
             }
@@ -25,8 +23,9 @@ pipeline {
         stage ("Generate ssh keys") {
             steps {
                 script {
-                    println("Keys will be generated in ${HOME_PATH}")
-                    sh "ssh-keygen -t ed25519 -N '' -f ${env.HOME_PATH}/.ssh/id_ed25519"
+                    println("Keys will be generated in ${env.SSH_PATH}")
+                    sh "mkdir -p ${env.SSH_PATH}"
+                    sh "ssh-keygen -t ed25519 -N '' -f ${env.SSH_PATH}/id_ed25519"
                 }
             }
         }
@@ -34,22 +33,29 @@ pipeline {
             steps {
                 script {
                     sh "chmod +x scripts/add_ssh_credentials.sh"
-                    sh "scripts/add_ssh_credentials.sh github_${params.AGENT_NAME}"
+                    sh "scripts/add_ssh_credentials.sh"
                 }
             }
         }
         stage ("Input public key into GitHub") {
             steps {
                 script {
-                    sh "cat ${env.HOME_PATH}/.ssh/id_ed25519.pub"
+                    sh "cat ${env.SSH_PATH}/id_ed25519.pub"
                     def githubKeysAdded = input(id: "github_keys_added", message: "Copy shown public key to SSH keys on your GitHub account.")
+                }
+            }
+        }
+        stage ("Copy keys to agent .ssh directory") {
+            steps {
+                script {
+                    def githubKeysCopied = input(id: "copy_keys", message: "Copy both keys to agent's .ssh directory.")
                 }
             }
         }
         stage ("Finalize SSH setup") {
             steps {
                 script {
-                    sh "ssh-keyscan github.com >> ~/.ssh/known_hosts"
+                    def knownHostsUpdated = input(id: "update_known_hosts", message: "Run: 'ssh-keyscan github.com >> ~/.ssh/known_hosts' on your agent.")
                 }
             }
         }
