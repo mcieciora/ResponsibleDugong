@@ -8,7 +8,7 @@ function add_ssh_credentials() {
      "":"2",
      "credentials":{
         "scope":"GLOBAL",
-        "id":"'$AGENT_NAME'",
+        "id":"agent_'$AGENT_NAME'",
         "description":"",
         "username":"jenkins_server",
         "privateKeySource":{
