@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     sh "chmod +x scripts/add_ssh_credentials.sh"
-                    sh "scripts/add_ssh_credentials.sh ${params.AGENT_NAME}"
+                    sh "scripts/add_ssh_credentials.sh github_${params.AGENT_NAME}"
                 }
             }
         }

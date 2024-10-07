@@ -2,9 +2,6 @@ pipeline {
     agent {
         label "master"
     }
-    parameters {
-        booleanParam(name: "SAVE_TOKEN_AS_SECRET", defaultValue: false, description: "Save token as Jenkins secret. If false value will be printed out to console.")
-    }
     stages {
         stage ("Generate CRUMB") {
             steps {
@@ -17,13 +14,9 @@ pipeline {
         stage ("Copy token.sec value") {
             steps {
                 script {
-                    if (params.SAVE_TOKEN_AS_SECRET) {
-                        println("TBD")
-                    }
-                    else {
-                        sh "cat token.sec"
-                        def githubKeysAdded = input(id: "copy_token_sec_value", message: "Copy shown token. Keep it in safe place as it may be required for administrative tasks.")
-                    }
+                    sh "chmod +x scripts/add_ssh_credentials.sh"
+                    sh "scripts/add_ssh_credentials.sh github_${params.AGENT_NAME}"
+                    sh "cat token.sec"
                 }
             }
         }
