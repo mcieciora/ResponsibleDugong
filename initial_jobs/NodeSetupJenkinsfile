@@ -3,7 +3,7 @@ pipeline {
         label "master"
     }
     parameters {
-        string(name: "AGENT_NAME", defaultValue: "master", description: "Node name or label.")
+        string(name: "AGENT_NAME", defaultValue: "built-in", description: "Node name or label.")
         string(name: "TOKEN", defaultValue: "", description: "Provide CRUMB token.")
     }
     environment {

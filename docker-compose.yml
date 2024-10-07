@@ -10,7 +10,7 @@ services:
       - service_network
     restart: unless-stopped
   jenkins:
-    image: mcieciora/responsible_dugong:latest
+    image: mcieciora/responsible_dugong:0_4
     container_name: jenkins
     ports:
       - "8080:8080"
