@@ -4,7 +4,7 @@ listView("INPUT.PROJECT_NAME") {
     filterExecutors()
     jobs {
         name('INPUT.PROJECT_NAME')
-        regex('(.*ResponsibleDugong.*|TestOnNextJenkinsBuildPipeline|CheckForNewestJenkinsVersionPipeline|BaseJenkinsSetupPipeline)')
+        regex('(.*ResponsibleDugong.*|TestOnNextJenkinsBuildPipeline|CheckForNewestJenkinsVersionPipeline|NodeSetupPipeline|GenerateCRUMBPipeline)')
     }
     columns {
         status()

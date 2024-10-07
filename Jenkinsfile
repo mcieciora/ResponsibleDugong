@@ -3,13 +3,13 @@ pipeline {
     environment {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
         DOCKERHUB_TAG = "no_tag"
-        SCOUT_VERSION = "1.10.0"
+        SCOUT_VERSION = "1.14.0"
     }
     stages {
         stage ("Build Jenkins image") {
             steps {
                 script {
-                    sh "docker build -t jenkins_test_image ."
+                    sh "docker build --no-cache -t jenkins_test_image ."
                 }
             }
         }
@@ -31,6 +31,14 @@ pipeline {
                 script {
                     sh "chmod +x scripts/test_jenkins_setup.sh"
                     sh "scripts/test_jenkins_setup.sh"
+                }
+            }
+        }
+        stage ("Run app & health check") {
+            steps {
+                script {
+                    sh "chmod +x scripts/app_health_check.sh"
+                    sh "scripts/app_health_check.sh 30 6"
                 }
             }
         }
@@ -60,8 +68,7 @@ pipeline {
         always {
             sh "docker stop test_jenkins_instance"
             sh "docker container rm test_jenkins_instance"
-            sh "docker rmi jenkins_test_image"
-            sh "docker rmi ${DOCKERHUB_REPO}:${DOCKERHUB_TAG}"
+            sh "docker compose down --rmi all -v"
             cleanWs()
         }
     }

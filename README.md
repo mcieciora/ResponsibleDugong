@@ -5,7 +5,7 @@ Responsible Dugong is an <i>open source setup of Jenkins instance preconfigured 
 
 Currently supported tools and versions:
 
-- Jenkins 2.463
+- Jenkins 2.479
   - additional plugins listed in casc/plugins.txt
 
 - Docker 24.0.0+ & DockerCompose 2.22.0
@@ -25,7 +25,7 @@ This animal was chosen as mascot for this project to raise awareness, that there
 
 <h2>Introduction</h2>
 
-CarelessVaquita main pipeline uses git checkout stage and tag creation command. 
+CarelessVaquita's main pipeline uses git checkout stage and tag creation commands. 
 The purpose of using and establishing an SSH connection (instead of cloning, fetching or committing and tagging via HTTPS) is to encrypt data exchanged between the client and the server. 
 SSH keys are more secure than any password or authentication token, making them almost impossible to crack. 
 It is highly advised to create SSH keys on daily basis, but most importantly follow steps below to set up SSH keys authentication on Jenkins server.
@@ -34,11 +34,16 @@ It is highly advised to create SSH keys on daily basis, but most importantly fol
 <h2>How to setup</h2>
 
 <h3>Base Jenkins setup job</h3>
-After logging into your Jenkins instance there should be a job called "BaseJenkinsSetupPipeline" ready to trigger. Start it with "Build" button. By default, it sets up SSH keys, which are available in .ssh_keys directory in your local Jenkins workspace setup. View logs and wait until proceed confirmation appears. Copy provided public SSH keys and go to your GitHub settings and create new SSH key. After that click "Proceed" and wait until build finishes few more steps. Base SSH setup is now complete. You can move to SetupDSLJob part.
+After logging into your Jenkins instance there should be a job called "GenerateCRUMBPipeline" ready to trigger. Start it with "Build" button. The purpose of this job is to generate API token to do all administrative work from Jenkins pipelines. Learn more about CRUMB and tokens here: https://www.jenkins.io/doc/book/security/csrf-protection/. When build is finished, get token from logs and save it for later. \
+After that open "NodeSetupPipeline" job and trigger it with default "build-in" value set. Provide generated token and follow instructions of the build. The main goal of this pipeline is to set up pair of SSH keys, which are available in ssh_keys directory in your local Jenkins volume. \
+Pipeline will ask you to:
+- copy printed key and add it to your GitHub account. \
+- copy two keys from .jenkins_volume/ssh_keys to .ssh_keys \
+- run git sync command on the agent
+
+To add any other node just create it via UI in Jenkins, then set it online and repeat the instruction. Instead of .ssh_keys you will copy keys to physical file system.
 
 ![BaseJenkinsSetupPipeline.png](doc/BaseJenkinsSetupPipeline.PNG)
-
-<b>NOTE: </b> Feature described above is in its experimental stage, and it was tested only through manual testing. If any issues appear please consider resolving them by using the following Step-by-step instruction.
 
 <h3>Step-by-step instruction</h3>
 

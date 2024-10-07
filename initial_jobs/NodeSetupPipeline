@@ -1,0 +1,23 @@
+pipelineJob("NodeSetupPipeline") {
+    parameters {
+        stringParam("AGENT_NAME", "built-in", "Node name or label.")
+        stringParam("TOKEN", "", "Provide CRUMB token.")
+    }
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("https://github.com/mcieciora/ResponsibleDugong.git")
+                    }
+                    branch('*/develop')
+                }
+            }
+            scriptPath("initial_jobs/NodeSetupJenkinsfile")
+            lightweight()
+        }
+    }
+    logRotator {
+        daysToKeep(31)
+    }
+}
