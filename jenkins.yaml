@@ -26,10 +26,11 @@ jenkins:
               - user: ${JENKINS_ADMIN_USER}
 jobs:
   - file: /root/casc/initial_jobs/SetupDSLJobs
-  - file: /root/casc/initial_jobs/BaseJenkinsSetupPipeline
+  - file: /root/casc/initial_jobs/GenerateCRUMBPipeline
+  - file: /root/casc/initial_jobs/NodeSetupPipeline
 security:
   globalJobDslSecurityConfiguration:
     useScriptSecurity: false
 unclassified:
   location:
-    url: http://localhost:8080
+    url: ${JENKINS_URL}

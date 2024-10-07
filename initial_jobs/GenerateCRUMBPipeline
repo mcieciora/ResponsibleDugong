@@ -1,4 +1,4 @@
-pipelineJob("BaseJenkinsSetupPipeline") {
+pipelineJob("GenerateCRUMBPipeline") {
     definition {
         cpsScm {
             scm {
@@ -9,11 +9,11 @@ pipelineJob("BaseJenkinsSetupPipeline") {
                     branch('*/develop')
                 }
             }
-            scriptPath("initial_jobs/BaseJenkinsSetupJenkinsfile")
+            scriptPath("initial_jobs/GenerateCRUMBJenkinsfile")
             lightweight()
         }
     }
     logRotator {
-        daysToKeep(31)
+        daysToKeep(1)
     }
 }
