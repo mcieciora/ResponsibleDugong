@@ -37,15 +37,12 @@ function generate_crumb_and_token() {
   echo "Token is: $TOKEN"
 }
 
-function start_setup_dsl_job() {
+function test_setup_dsl_job() {
   curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
   sleep 30
   echo "Finished waiting."
-}
-
-function test_setup_dsl_job() {
-  EXPECTED_JOBS_ARRAY=("SetupDSLJobs" "NodeSetupPipeline" "GenerateCRUMBPipeline" "PythonDependenciesVerification_CarelessVaquita"
+  EXPECTED_JOBS_ARRAY=("SetupDSLJobs" "PythonDependenciesVerification_CarelessVaquita"
   "MultibranchPipeline_CarelessVaquita" "ScanDockerImages_CarelessVaquita" "ParametrizedTestPipeline_CarelessVaquita")
   echo "Getting list of all jobs..."
   MAIN_PAGE=$(curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
@@ -79,11 +76,29 @@ function test_setup_dsl_job() {
   done
 }
 
-function test_on_next_jenkins_build_pipeline() {
+function test_jenkins_setup_utilities() {
   curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET&PROJECT_URL=https://github.com/mcieciora/ResponsibleDugong.git&PROJECT_NAME=ResponsibleDugong&BRANCH_NAME=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
   sleep 30
   echo "Finished waiting."
+  EXPECTED_JOBS_ARRAY=("MultibranchPipeline_ResponsibleDugong" "CheckForNewestJenkinsVersionPipeline" "NodeSetupPipeline" "GenerateCRUMBPipeline" )
+  echo "Getting list of all jobs..."
+  MAIN_PAGE=$(curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
+  echo "$MAIN_PAGE" > "main_page.json"
+
+  for JOB in "${EXPECTED_JOBS_ARRAY[@]}"; do
+    jq -r ".jobs[].name" main_page.json | grep "$JOB"
+    RET_VAL=$?
+    if [ $RET_VAL -ne 0 ]; then
+      echo "$JOB job is missing in Jenkins instance."
+      exit 1
+    else
+      echo "pass"
+    fi
+  done
+}
+
+function test_on_next_jenkins_build_pipeline() {
   curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/buildWithParameters?delay=0sec&token=$SECRET&BRANCH=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 15 seconds to let TestOnNextJenkinsBuildPipeline finish..."
   sleep 15
@@ -106,6 +121,6 @@ sleep 5
 
 wait_for_jenkins_instance
 generate_crumb_and_token
-start_setup_dsl_job
 test_setup_dsl_job
+test_jenkins_setup_utilities
 test_on_next_jenkins_build_pipeline
