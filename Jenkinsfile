@@ -41,6 +41,12 @@ pipeline {
                     sh "scripts/app_health_check.sh 30 6"
                 }
             }
+            post {
+                always {
+                    sh "docker stop test_jenkins_instance"
+                    sh "docker compose down --rmi all -v"
+                }
+            }
         }
         stage ("Push image") {
             steps {
