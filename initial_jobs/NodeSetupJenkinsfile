@@ -56,6 +56,7 @@ pipeline {
             steps {
                 script {
                     def knownHostsUpdated = input(id: "update_known_hosts", message: "Run: 'ssh-keyscan github.com >> ~/.ssh/known_hosts' on your agent.")
+                    def configUpdated = input(id: "update_config", message: "Set user.name and user.email in git config. git config --global user.email 'you@nowhere.com'; git config --global user.name 'you'")
                 }
             }
         }
