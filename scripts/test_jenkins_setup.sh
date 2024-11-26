@@ -118,7 +118,7 @@ function test_on_next_jenkins_build_pipeline() {
 echo "Creating temporary jenkins_network network"
 docker network create jenkins_network
 echo "Launching Jenkins instance..."
-docker run -d --name test_jenkins_instance --env-file .env_example jenkins_test_image
+docker run -d --name test_jenkins_instance --env-file .env_example --expose 8080:8080 jenkins_test_image
 echo "Sleeping for 5 seconds before checking boot status..."
 sleep 5
 
