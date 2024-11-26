@@ -23,7 +23,7 @@ function wait_for_jenkins_instance() {
 
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
-  JENKINS_URL="http://localhost:8080"
+  JENKINS_URL="http://test_jenkins_instance:8080"
   JENKINS_USER="$JENKINS_ADMIN_USER"
   JENKINS_PASSWORD="$JENKINS_ADMIN_PASS"
   docker ps
@@ -118,7 +118,7 @@ function test_on_next_jenkins_build_pipeline() {
 echo "Creating temporary jenkins_network network"
 docker network create jenkins_network
 echo "Launching Jenkins instance..."
-docker run -d --name test_jenkins_instance --env-file .env_example --network jenkins_network jenkins_test_image
+docker run -d --name test_jenkins_instance --env-file .env_example jenkins_test_image
 echo "Sleeping for 5 seconds before checking boot status..."
 sleep 5
 
