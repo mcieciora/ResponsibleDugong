@@ -26,6 +26,7 @@ function generate_crumb_and_token() {
   JENKINS_URL="http://localhost:8080"
   JENKINS_USER="$JENKINS_ADMIN_USER"
   JENKINS_PASSWORD="$JENKINS_ADMIN_PASS"
+  docker ps
   echo "Sending crumb request..."
   CRUMB=$(curl "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar cookies.txt --user "$JENKINS_USER:$JENKINS_PASSWORD")
   echo "Using crumb to get API token..."
