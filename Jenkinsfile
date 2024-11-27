@@ -54,7 +54,6 @@ pipeline {
                     docker.withRegistry("", "dockerhub_id") {
                         if (env.BRANCH_NAME == "develop") {
                             DOCKERHUB_TAG = "develop"
-
                         }
                         else if (env.BRANCH_NAME == "master") {
                             DOCKERHUB_TAG = "latest"
