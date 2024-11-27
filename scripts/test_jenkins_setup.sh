@@ -26,8 +26,10 @@ function generate_crumb_and_token() {
   JENKINS_URL="http://test_jenkins_instance:8080"
   JENKINS_USER="$JENKINS_ADMIN_USER"
   JENKINS_PASSWORD="$JENKINS_ADMIN_PASS"
-  docker ps
   echo "Sending crumb request..."
+
+  CRUMB=$(curl "http://test_jenkins_instance:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar cookies.txt --user "$JENKINS_USER:$JENKINS_PASSWORD")
+
   CRUMB=$(curl "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,%22:%22,//crumb)" --cookie-jar cookies.txt --user "$JENKINS_USER:$JENKINS_PASSWORD")
   echo "Using crumb to get API token..."
   TOKEN_DATA=$(curl "$JENKINS_URL/user/$JENKINS_USER/descriptorByName/jenkins.security.ApiTokenProperty/generateNewToken" \
@@ -115,10 +117,12 @@ function test_on_next_jenkins_build_pipeline() {
   fi
 }
 
+source .env_example
+
 echo "Creating temporary jenkins_network network"
 docker network create jenkins_network
 echo "Launching Jenkins instance..."
-docker run -d --name test_jenkins_instance --env-file .env_example --expose 8080:8080 jenkins_test_image
+docker run -d --name test_jenkins_instance --env-file .env_example --network jenkins_network jenkins_test_image
 echo "Sleeping for 5 seconds before checking boot status..."
 sleep 5
 
