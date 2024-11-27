@@ -71,7 +71,6 @@ pipeline {
     }
     post {
         always {
-            sh "docker stop test_jenkins_instance"
             sh "docker container rm test_jenkins_instance"
             sh "docker compose down --rmi all -v"
             cleanWs()

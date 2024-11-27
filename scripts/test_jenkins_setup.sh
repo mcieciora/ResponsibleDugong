@@ -125,4 +125,7 @@ wait_for_jenkins_instance
 generate_crumb_and_token
 test_setup_dsl_job
 test_jenkins_setup_utilities
+
+echo "Waiting for queue to clear out..."
+sleep 120
 test_on_next_jenkins_build_pipeline
