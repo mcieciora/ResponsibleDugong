@@ -99,7 +99,7 @@ function test_jenkins_setup_utilities() {
     fi
   done
   echo "Waiting for queue to clear out..."
-  sleep 120
+  sleep 180
 }
 
 function test_on_next_jenkins_build_pipeline() {

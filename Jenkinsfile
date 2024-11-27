@@ -5,6 +5,9 @@ pipeline {
         DOCKERHUB_TAG = "no_tag"
         SCOUT_VERSION = "1.14.0"
     }
+    options {
+        overrideIndexTriggers(false)
+    }
     stages {
         stage ("Build Jenkins image") {
             steps {
