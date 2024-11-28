@@ -4,7 +4,7 @@ pipeline {
         cron("H 6 * * *")
     }
     environment {
-        AVAILABLE_VERSION="2.479"
+        AVAILABLE_VERSION="2.486"
     }
     stages {
         stage("Check for Jenkins updates") {

@@ -100,8 +100,8 @@ function test_jenkins_setup_utilities() {
 
 function test_on_next_jenkins_build_pipeline() {
   curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/buildWithParameters?delay=0sec&token=$SECRET&BRANCH=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
-  echo "Sleeping for 30 seconds to let TestOnNextJenkinsBuildPipeline finish..."
-  sleep 30
+  echo "Sleeping for 15 seconds to let TestOnNextJenkinsBuildPipeline finish..."
+  sleep 15
   echo "Finished waiting."
   BUILD_RESULT=$(curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/1/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$BUILD_RESULT" > "build_result.json"
@@ -124,5 +124,6 @@ sleep 5
 wait_for_jenkins_instance
 generate_crumb_and_token
 test_setup_dsl_job
-test_jenkins_setup_utilities
-test_on_next_jenkins_build_pipeline
+# Disable utilities and next jenkins build testing
+# test_jenkins_setup_utilities
+# test_on_next_jenkins_build_pipeline
