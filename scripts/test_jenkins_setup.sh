@@ -74,8 +74,6 @@ function test_setup_dsl_job() {
       echo "pass"
     fi
   done
-  echo "Waiting for queue to clear out..."
-  sleep 120
 }
 
 function test_jenkins_setup_utilities() {
@@ -98,8 +96,6 @@ function test_jenkins_setup_utilities() {
       echo "pass"
     fi
   done
-  echo "Waiting for queue to clear out..."
-  sleep 180
 }
 
 function test_on_next_jenkins_build_pipeline() {
