@@ -1,6 +1,6 @@
 jenkins:
   systemMessage: "Welcome to Jenkins! Hope you will have great time here."
-  numExecutors: 1
+  numExecutors: 3
   mode: NORMAL
   scmCheckoutRetryCount: 1
   labelString: "master"

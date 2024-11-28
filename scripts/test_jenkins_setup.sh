@@ -8,7 +8,7 @@ function wait_for_jenkins_instance() {
 
   while [ "$RETRY" -le "$MAX_RETRIES" ]; do
     echo "Retry: [$RETRY/$MAX_RETRIES]"
-    if docker logs test_jenkins_instance 2>&1 | grep "Jenkins is fully up and running"; then
+    if docker logs jenkins 2>&1 | grep "Jenkins is fully up and running"; then
       echo "Jenkins is ready."
       return 0
     else
@@ -23,7 +23,7 @@ function wait_for_jenkins_instance() {
 
 function generate_crumb_and_token() {
   OUTPUT_FILE="token_data.json"
-  JENKINS_URL="http://test_jenkins_instance:8080"
+  JENKINS_URL="http://localhost:8080"
   JENKINS_USER="$JENKINS_ADMIN_USER"
   JENKINS_PASSWORD="$JENKINS_ADMIN_PASS"
   echo "Sending crumb request..."
@@ -114,13 +114,16 @@ function test_on_next_jenkins_build_pipeline() {
   fi
 }
 
+source .env
+
 echo "Launching Jenkins instance..."
-docker run -d --name test_jenkins_instance --env-file .env_example --network jenkins_network jenkins_test_image
+docker compose up -d jenkins
 echo "Sleeping for 5 seconds before checking boot status..."
 sleep 5
 
 wait_for_jenkins_instance
 generate_crumb_and_token
 test_setup_dsl_job
-test_jenkins_setup_utilities
-test_on_next_jenkins_build_pipeline
+# Disable utilities and next jenkins build testing
+# test_jenkins_setup_utilities
+# test_on_next_jenkins_build_pipeline

@@ -43,7 +43,6 @@ pipeline {
             }
             post {
                 always {
-                    sh "docker stop test_jenkins_instance"
                     sh "docker compose down --rmi all -v"
                 }
             }
@@ -54,7 +53,6 @@ pipeline {
                     docker.withRegistry("", "dockerhub_id") {
                         if (env.BRANCH_NAME == "develop") {
                             DOCKERHUB_TAG = "develop"
-
                         }
                         else if (env.BRANCH_NAME == "master") {
                             DOCKERHUB_TAG = "latest"
@@ -72,8 +70,6 @@ pipeline {
     }
     post {
         always {
-            sh "docker stop test_jenkins_instance"
-            sh "docker container rm test_jenkins_instance"
             sh "docker compose down --rmi all -v"
             cleanWs()
         }
