@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'master'
+    }
     parameters {
         string(name: "PROJECT_NAME", defaultValue: "CarelessVaquita", description: "Project name.")
         string(name: "PROJECT_URL", defaultValue: "https://github.com/mcieciora/CarelessVaquita.git", description: "Full github url to repository.")

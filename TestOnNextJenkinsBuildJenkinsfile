@@ -1,7 +1,9 @@
 def jenkinsImage
 
 pipeline {
-    agent any
+    agent {
+        label 'executor'
+    }
     environment {
         REPO_URL = "https://github.com/mcieciora/ResponsibleDugong.git"
     }

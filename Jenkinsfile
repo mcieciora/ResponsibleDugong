@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'executor'
+    }
     environment {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
         DOCKERHUB_TAG = "no_tag"
