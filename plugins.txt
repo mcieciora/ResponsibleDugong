@@ -1,6 +1,7 @@
 configuration-as-code:latest
 role-strategy:latest
 blueocean:latest
+pipeline-graph-view:latest
 docker-plugin:latest
 docker-workflow:latest
 rebuild:latest
