@@ -1,10 +1,10 @@
 configuration-as-code:latest
 role-strategy:latest
-blueocean:latest
+job-dsl:latest
 pipeline-graph-view:latest
+pipeline-stage-view:latest
+parameterized-scheduler:latest
+rebuild:latest
 docker-plugin:latest
 docker-workflow:latest
-rebuild:latest
-parameterized-scheduler:latest
-job-dsl:latest
 ws-cleanup:latest
