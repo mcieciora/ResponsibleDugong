@@ -8,7 +8,7 @@ services:
       - rd-registry-volume:/var/lib/registry:rw
     networks:
       - service_network
-    restart: unless-stopped
+    restart: always
   jenkins:
     image: rd_jenkins
     build: .
@@ -24,16 +24,17 @@ services:
       - .env
     networks:
       - service_network
-    restart: unless-stopped
+    restart: always
   portainer:
     image: portainer/portainer-ce:latest
     container_name: rd_portainer
     ports:
       - "9443:9443"
+      - "9000:9000"
     volumes:
       - rd-portainer-volume:/data
       - /var/run/docker.sock:/var/run/docker.sock
-    restart: unless-stopped
+    restart: always
   app:
     image: mcieciora/exultant_rhino:app_latest
     container_name: rd_exultant_rhino_app
@@ -43,7 +44,7 @@ services:
       - .env
     networks:
       - service_network
-    restart: unless-stopped
+    restart: always
   api:
     image: mcieciora/exultant_rhino:api_latest
     container_name: rd_exultant_rhino_api
@@ -53,7 +54,7 @@ services:
       - .env
     networks:
       - service_network
-    restart: unless-stopped
+    restart: always
   db:
     image: postgres
     container_name: rd_postgres
@@ -65,6 +66,7 @@ services:
       - rd-postgres-volume:/var/lib/postgresql/data
     networks:
       - service_network
+    restart: always
   pgadmin:
     image: dpage/pgadmin4
     container_name: rd_pgadmin4
@@ -74,6 +76,7 @@ services:
       - .env
     volumes:
       - rd-pgadmin-volume:/var/lib/pgadmin
+    restart: always
 networks:
   service_network:
       name: jenkins_network
