@@ -31,6 +31,7 @@ jobs:
   - file: /root/casc/initial_jobs/SetupDSLJobs
   - file: /root/casc/initial_jobs/GenerateCRUMBPipeline
   - file: /root/casc/initial_jobs/NodeSetupPipeline
+  - file: /root/casc/initial_jobs/DockerPruneCleanUpPipeline
 security:
   globalJobDslSecurityConfiguration:
     useScriptSecurity: false

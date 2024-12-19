@@ -1,0 +1,19 @@
+pipelineJob("DockerPruneCleanUp") {
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("https://github.com/mcieciora/ResponsibleDugong.git")
+                    }
+                    branch('*/develop')
+                }
+            }
+            scriptPath("initial_jobs/DockerPruneCleanUpJenkinsfile")
+            lightweight()
+        }
+    }
+    logRotator {
+        daysToKeep(7)
+    }
+}
