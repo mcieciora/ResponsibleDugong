@@ -1,4 +1,7 @@
 pipelineJob("DockerPruneCleanUp") {
+    parameters {
+        choiceParam("NODE", ['Amy', 'Betty'], "Node name or label.")
+    }
     definition {
         cpsScm {
             scm {
