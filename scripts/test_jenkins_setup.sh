@@ -121,8 +121,8 @@ function clear_build_queue() {
   RUNNING_BUILDS=$(curl --globoff "$JENKINS_URL/computer/api/json?depth=2&tree=computer[executors[currentExecutable[building,url]],oneOffExecutors[currentExecutable[building,url]]]&xpath=//currentExecutable[building=%27true%27]/url&wrapper=builds" --user "$JENKINS_USER:$TOKEN")
   echo "$RUNNING_BUILDS" > "running_builds.json"
   cat "running_builds.json"
-  jq -r '.computer[].executors[] | select (.currentExecutable!=null) | .currentExecutable.url' running_builds.json | xargs -I {} curl {}stop
-  jq -r '.computer[].oneOffExecutors[] | select (.currentExecutable!=null) | .currentExecutable.url' running_builds.json | xargs -I {} curl {}stop
+  jq -r '.computer[].executors[] | select (.currentExecutable!=null) | .currentExecutable.url' running_builds.json | xargs -I {} curl {}stop --user "$JENKINS_USER:$TOKEN"
+  jq -r '.computer[].oneOffExecutors[] | select (.currentExecutable!=null) | .currentExecutable.url' running_builds.json | xargs -I {} curl {}stop --user "$JENKINS_USER:$TOKEN"
 }
 
 source .env
