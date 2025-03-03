@@ -119,7 +119,8 @@ function test_on_next_jenkins_build_pipeline() {
 function clear_build_queue() {
   echo "Clearing out build queue..."
   curl -g --user "$USER":"$API_TOKEN" http://localhost:8080/api/json?tree=jobs[builds[building,url]] > running_builds.json
-  jq -r '.jobs[].builds[] | select (.building==true)  | .url' running_builds.json | xargs -I {} curl -g --user "$USER":"$API_TOKEN" {}stop
+  cat running_builds.json
+  jq -r '.jobs[].builds[] | select (.building==true)  | .url' running_builds.json | xargs -I {} echo "Stopping ${}"; curl -g --user "$USER":"$API_TOKEN" {}stop
 }
 
 source .env
