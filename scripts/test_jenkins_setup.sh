@@ -57,8 +57,8 @@ function test_setup_dsl_job() {
     else
       echo "pass"
     fi
-  clear_build_queue
   done
+  clear_build_queue
 
   EXPECTED_BRANCHES_ARRAY=("master" "develop")
   echo "Getting list of all branches..."
@@ -96,8 +96,8 @@ function test_jenkins_setup_utilities() {
     else
       echo "pass"
     fi
-  clear_build_queue
   done
+  clear_build_queue
 }
 
 function test_on_next_jenkins_build_pipeline() {
