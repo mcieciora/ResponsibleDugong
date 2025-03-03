@@ -122,6 +122,7 @@ function clear_build_queue() {
   echo "$RUNNING_BUILDS" > "running_builds.json"
   cat "running_builds.json"
   jq -r '.computer[].executors[] | select (.currentExecutable!=null) | .currentExecutable.url' running_builds.json | xargs -I {} curl {}stop
+  jq -r '.computer[].oneOffExecutors[] | select (.currentExecutable!=null) | .currentExecutable.url' running_builds.json | xargs -I {} curl {}stop
 }
 
 source .env

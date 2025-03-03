@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.494-alpine
+FROM jenkins/jenkins:2.499-alpine
 
 USER root
 
