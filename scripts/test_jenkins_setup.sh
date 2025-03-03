@@ -81,7 +81,7 @@ function test_jenkins_setup_utilities() {
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
   sleep 30
   echo "Finished waiting."
-  EXPECTED_JOBS_ARRAY=("MultibranchPipeline_ResponsibleDugong" "CheckForNewestJenkinsVersionPipeline" "NodeSetupPipeline" "GenerateCRUMBPipeline" )
+  EXPECTED_JOBS_ARRAY=("MultibranchPipeline_CarelessVaquita" "CheckForNewestJenkinsVersionPipeline" "NodeSetupPipeline" "GenerateCRUMBPipeline" )
   echo "Getting list of all jobs..."
   MAIN_PAGE=$(curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$MAIN_PAGE" > "main_page.json"
@@ -114,6 +114,12 @@ function test_on_next_jenkins_build_pipeline() {
   fi
 }
 
+function clear_build_queue() {
+  RUNNING_BUILDS=$(curl "$JENKINS_URL/computer/api/json?depth=2&tree=computer[executors[currentExecutable[building,url]],oneOffExecutors[currentExecutable[building,url]]]&xpath=//currentExecutable[building=%27true%27]/url&wrapper=builds")
+  echo "$RUNNING_BUILDS" > "running_builds.json"
+  jq -r '.computer[].executors[] | select (.currentExecutable!=null) | .currentExecutable.url' running_builds.json | xargs -I {} curl {}stop
+}
+
 source .env
 
 echo "Launching Jenkins instance..."
@@ -124,6 +130,6 @@ sleep 5
 wait_for_jenkins_instance
 generate_crumb_and_token
 test_setup_dsl_job
-# Disable utilities and next jenkins build testing
-# test_jenkins_setup_utilities
-# test_on_next_jenkins_build_pipeline
+clear_build_queue
+test_jenkins_setup_utilities
+test_on_next_jenkins_build_pipeline

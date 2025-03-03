@@ -35,47 +35,28 @@ services:
       - rd-portainer-volume:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: always
-  app:
-    image: mcieciora/exultant_rhino:app_latest
-    container_name: rd_exultant_rhino_app
+  prometheus:
+    image: prom/prometheus
+    container_name: rd_prometheus
     ports:
-      - "8501:8501"
-    env_file:
-      - .env
-    networks:
-      - service_network
-    restart: always
-  api:
-    image: mcieciora/exultant_rhino:api_latest
-    container_name: rd_exultant_rhino_api
-    ports:
-      - "8500:8500"
-    env_file:
-      - .env
-    networks:
-      - service_network
-    restart: always
-  db:
-    image: postgres
-    container_name: rd_postgres
-    ports:
-      - "5432:5432"
-    env_file:
-      - .env
+      - "9090:9090"
     volumes:
-      - rd-postgres-volume:/var/lib/postgresql/data
+      - rd-prometheus-volume:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - service_network
     restart: always
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: rd_pgadmin4
+  grafana:
+    image: grafana/grafana
+    container_name: rd_grafana
     ports:
-      - "8888:80"
+      - "3000:3000"
+    volumes:
+      - ./grafana.yml:/etc/grafana/provisioning/datasources/datasource.yml
     env_file:
       - .env
-    volumes:
-      - rd-pgadmin-volume:/var/lib/pgadmin
+    networks:
+      - service_network
     restart: always
 networks:
   service_network:
@@ -83,5 +64,4 @@ networks:
 volumes:
   rd-registry-volume:
   rd-portainer-volume:
-  rd-postgres-volume:
-  rd-pgadmin-volume:
+  rd-prometheus-volume:
