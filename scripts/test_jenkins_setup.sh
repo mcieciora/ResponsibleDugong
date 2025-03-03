@@ -115,7 +115,8 @@ function test_on_next_jenkins_build_pipeline() {
 }
 
 function clear_build_queue() {
-  RUNNING_BUILDS=$(curl "$JENKINS_URL/computer/api/json?depth=2&tree=computer[executors[currentExecutable[building,url]],oneOffExecutors[currentExecutable[building,url]]]&xpath=//currentExecutable[building=%27true%27]/url&wrapper=builds")
+  echo "Clearing out build queue..."
+  RUNNING_BUILDS=$(curl --globoff "$JENKINS_URL/computer/api/json?depth=2&tree=computer[executors[currentExecutable[building,url]],oneOffExecutors[currentExecutable[building,url]]]&xpath=//currentExecutable[building=%27true%27]/url&wrapper=builds")
   echo "$RUNNING_BUILDS" > "running_builds.json"
   jq -r '.computer[].executors[] | select (.currentExecutable!=null) | .currentExecutable.url' running_builds.json | xargs -I {} echo {}stop
 }
@@ -131,5 +132,5 @@ wait_for_jenkins_instance
 generate_crumb_and_token
 test_setup_dsl_job
 clear_build_queue
-# test_jenkins_setup_utilities
-# test_on_next_jenkins_build_pipeline
+ test_jenkins_setup_utilities
+ test_on_next_jenkins_build_pipeline
