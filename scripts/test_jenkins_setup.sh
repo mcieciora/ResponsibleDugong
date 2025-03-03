@@ -57,6 +57,7 @@ function test_setup_dsl_job() {
     else
       echo "pass"
     fi
+  clear_build_queue
   done
 
   EXPECTED_BRANCHES_ARRAY=("master" "develop")
@@ -95,6 +96,7 @@ function test_jenkins_setup_utilities() {
     else
       echo "pass"
     fi
+  clear_build_queue
   done
 }
 
@@ -131,6 +133,5 @@ sleep 5
 wait_for_jenkins_instance
 generate_crumb_and_token
 test_setup_dsl_job
-clear_build_queue
 test_jenkins_setup_utilities
 test_on_next_jenkins_build_pipeline
