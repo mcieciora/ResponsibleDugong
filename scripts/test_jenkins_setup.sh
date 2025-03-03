@@ -132,5 +132,5 @@ wait_for_jenkins_instance
 generate_crumb_and_token
 test_setup_dsl_job
 clear_build_queue
- test_jenkins_setup_utilities
- test_on_next_jenkins_build_pipeline
+test_jenkins_setup_utilities
+test_on_next_jenkins_build_pipeline
