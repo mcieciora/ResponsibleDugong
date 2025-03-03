@@ -118,10 +118,10 @@ function test_on_next_jenkins_build_pipeline() {
 
 function clear_build_queue() {
   echo "Clearing out build queue..."
-  RUNNING_BUILDS=$(curl --globoff "$JENKINS_URL/computer/api/json?depth=2&tree=computer[executors[currentExecutable[building,url]],oneOffExecutors[currentExecutable[building,url]]]&xpath=//currentExecutable[building=%27true%27]/url&wrapper=builds")
+  RUNNING_BUILDS=$(curl --globoff "$JENKINS_URL/computer/api/json?depth=2&tree=computer[executors[currentExecutable[building,url]],oneOffExecutors[currentExecutable[building,url]]]&xpath=//currentExecutable[building=%27true%27]/url&wrapper=builds" --user "$JENKINS_USER:$TOKEN")
   echo "$RUNNING_BUILDS" > "running_builds.json"
   cat "running_builds.json"
-  jq -r '.computer[].executors[] | select (.currentExecutable!=null) | .currentExecutable.url' running_builds.json | xargs -I {} echo {}stop
+  jq -r '.computer[].executors[] | select (.currentExecutable!=null) | .currentExecutable.url' running_builds.json | xargs -I {} curl {}stop
 }
 
 source .env
