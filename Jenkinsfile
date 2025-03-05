@@ -15,19 +15,19 @@ pipeline {
                 }
             }
         }
-//         stage ("Analyze image") {
-//             steps {
-//                 script {
-//                     withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
-//                         sh "chmod +x scripts/scan_jenkins_image.sh"
-//                         return_value = sh(script: "scripts/scan_jenkins_image.sh", returnStdout: true).trim()
-//                         if (return_value.contains("Script failed, because vulnerabilities were found.")) {
-//                             unstable(return_value)
-//                         }
-//                     }
-//                 }
-//             }
-//         }
+        stage ("Analyze image") {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
+                        sh "chmod +x scripts/scan_jenkins_image.sh"
+                        return_value = sh(script: "scripts/scan_jenkins_image.sh", returnStdout: true).trim()
+                        if (return_value.contains("Script failed, because vulnerabilities were found.")) {
+                            unstable(return_value)
+                        }
+                    }
+                }
+            }
+        }
         stage ("Run tests on next Jenkins build") {
             steps {
                 script {
