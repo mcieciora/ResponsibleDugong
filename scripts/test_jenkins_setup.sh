@@ -114,6 +114,17 @@ function test_on_next_jenkins_build_pipeline() {
   fi
 }
 
+function clear_build_queue() {
+  echo "Clearing out build queue..."
+  curl -g --user "$JENKINS_USER:$TOKEN" "$JENKINS_URL/api/json?tree=jobs[builds[building,url]]" > "running_builds.json"
+  for URL in $(jq -r "try (.jobs[].builds[] | select (.building==true) | .url) catch false" "running_builds.json" | sed -e "s/\r//")
+  do
+    curl -X POST "$URL"stop --user "$JENKINS_USER:$TOKEN" || echo "$URL" failed to stop
+  done
+  echo "Sleeping for 10 seconds to let Jenkins update the queue..."
+  sleep 10
+}
+
 source .env
 
 echo "Launching Jenkins instance..."
@@ -124,6 +135,5 @@ sleep 5
 wait_for_jenkins_instance
 generate_crumb_and_token
 test_setup_dsl_job
-# Disable utilities and next jenkins build testing
-# test_jenkins_setup_utilities
-# test_on_next_jenkins_build_pipeline
+test_jenkins_setup_utilities
+test_on_next_jenkins_build_pipeline

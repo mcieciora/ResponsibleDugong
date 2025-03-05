@@ -5,7 +5,7 @@ Responsible Dugong is an <i>open source setup of Jenkins instance preconfigured 
 
 Currently supported tools and versions:
 
-- Jenkins 2.494
+- Jenkins 2.499
   - additional plugins listed in casc/plugins.txt
 
 - Docker 24.0.0+ & DockerCompose 2.22.0
