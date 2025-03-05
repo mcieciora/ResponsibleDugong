@@ -119,8 +119,11 @@ function test_on_next_jenkins_build_pipeline() {
 function clear_build_queue() {
   echo "Clearing out build queue..."
   curl -g --user "$JENKINS_USER:$TOKEN" "$JENKINS_URL/api/json?tree=jobs[builds[building,url]]" > "running_builds.json"
-  cat running_builds.json
-  jq -r '.jobs[].builds[] | select (.building==true)  | .url' "running_builds.json" | xargs -I {} curl -g --user "$JENKINS_USER:$TOKEN" {}stop
+  for URL in $(jq -r "try (.jobs[].builds[] | select (.building==true) | .url) catch false" "running_builds.json" | sed -e "s/\r//")
+  do
+    echo "$URL"stop
+    curl -X POST "$URL"stop --user "$JENKINS_USER:$TOKEN"
+  done
   echo "Sleeping for 10 seconds to let Jenkins update the queue..."
   sleep 10
 }
