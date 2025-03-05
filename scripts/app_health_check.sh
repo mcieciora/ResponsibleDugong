@@ -3,9 +3,7 @@
 CHECK_TIME=$1
 EXPECTED_VALUE=$2
 
-sh "sed -i 's~5432:5432~8001:5432~g' docker-compose.yml"
-
-docker compose up -d registry portainer app api db pgadmin
+docker compose up -d registry portainer prometheus grafana
 echo "Sleeping for $CHECK_TIME"
 sleep "$CHECK_TIME"
 
