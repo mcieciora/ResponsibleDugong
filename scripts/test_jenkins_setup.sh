@@ -121,8 +121,7 @@ function clear_build_queue() {
   curl -g --user "$JENKINS_USER:$TOKEN" "$JENKINS_URL/api/json?tree=jobs[builds[building,url]]" > "running_builds.json"
   for URL in $(jq -r "try (.jobs[].builds[] | select (.building==true) | .url) catch false" "running_builds.json" | sed -e "s/\r//")
   do
-    echo "$URL"stop
-    curl -X POST "$URL"stop --user "$JENKINS_USER:$TOKEN"
+    curl -X POST "$URL"stop --user "$JENKINS_USER:$TOKEN" || echo "$URL" failed to stop
   done
   echo "Sleeping for 10 seconds to let Jenkins update the queue..."
   sleep 10
