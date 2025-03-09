@@ -3,7 +3,7 @@
 CHECK_TIME=$1
 EXPECTED_VALUE=$2
 
-docker compose up -d registry portainer prometheus grafana
+docker compose up -d registry portainer prometheus grafana mariadb vikunja
 echo "Sleeping for $CHECK_TIME"
 sleep "$CHECK_TIME"
 

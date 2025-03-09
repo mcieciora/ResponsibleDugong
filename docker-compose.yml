@@ -1,4 +1,14 @@
 services:
+  registry:
+    image: registry:2
+    container_name: rd_registry
+    ports:
+      - "5000:5000"
+    volumes:
+      - rd-registry-volume:/var/lib/registry:rw
+    networks:
+      - service_network
+    restart: always
   jenkins:
     image: rd_jenkins
     build: .
@@ -17,16 +27,6 @@ services:
     user:
       root
     restart: always
-  registry:
-    image: registry:2
-    container_name: rd_registry
-    ports:
-      - "5000:5000"
-    volumes:
-      - rd-registry-volume:/var/lib/registry:rw
-    networks:
-      - service_network
-    restart: always
   portainer:
     image: portainer/portainer-ce:latest
     container_name: rd_portainer
@@ -36,7 +36,7 @@ services:
     volumes:
       - rd-portainer-volume:/data
       - /var/run/docker.sock:/var/run/docker.sock
-    restart: always
+    restart: unless-stopped
   prometheus:
     image: prom/prometheus
     container_name: rd_prometheus
@@ -47,7 +47,7 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - service_network
-    restart: always
+    restart: unless-stopped
   grafana:
     image: grafana/grafana
     container_name: rd_grafana
@@ -59,7 +59,32 @@ services:
       - .env
     networks:
       - service_network
-    restart: always
+    restart: unless-stopped
+  vikunja:
+      image: vikunja/vikunja
+      container_name: rd_vikunja
+      ports:
+          - "3456:3456"
+      volumes:
+          - rd-vikunja-volume:/app/vikunja/files
+      env_file:
+          - .env
+      depends_on:
+          mariadb:
+              condition: service_healthy
+      restart: unless-stopped
+  mariadb:
+      image: mariadb:10
+      container_name: rd_mariadb
+      volumes:
+          - rd-mariadb-volume:/var/lib/mysql
+      env_file:
+          - .env
+      healthcheck:
+          test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $$MYSQL_USER --password=$$MYSQL_PASSWORD"]
+          interval: 2s
+          start_period: 30s
+      restart: unless-stopped
 networks:
   service_network:
       name: jenkins_network
@@ -67,3 +92,6 @@ volumes:
   rd-registry-volume:
   rd-portainer-volume:
   rd-prometheus-volume:
+  rd-postgres-volume:
+  rd-vikunja-volume:
+  rd-mariadb-volume:
