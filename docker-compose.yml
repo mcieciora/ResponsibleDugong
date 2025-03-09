@@ -1,6 +1,6 @@
 services:
   registry:
-    image: registry:2
+    image: registry:2.8
     container_name: rd_registry
     ports:
       - "5000:5000"
@@ -10,7 +10,7 @@ services:
       - service_network
     restart: always
   jenkins:
-    image: rd_jenkins
+    image: rd_jenkins:0.5.1
     build: .
     container_name: jenkins
     ports:
@@ -28,7 +28,7 @@ services:
       root
     restart: always
   portainer:
-    image: portainer/portainer-ce:latest
+    image: portainer/portainer-ce:2.27.1
     container_name: rd_portainer
     ports:
       - "9443:9443"
@@ -38,7 +38,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:v3.2.1
     container_name: rd_prometheus
     ports:
       - "9090:9090"
@@ -49,7 +49,7 @@ services:
       - service_network
     restart: unless-stopped
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:11.5.2
     container_name: rd_grafana
     ports:
       - "3000:3000"
@@ -61,7 +61,7 @@ services:
       - service_network
     restart: unless-stopped
   vikunja:
-      image: vikunja/vikunja
+      image: vikunja/vikunja:0.24.6
       container_name: rd_vikunja
       ports:
           - "3456:3456"
@@ -74,7 +74,7 @@ services:
               condition: service_healthy
       restart: unless-stopped
   mariadb:
-      image: mariadb:10
+      image: mariadb:11.7.2
       container_name: rd_mariadb
       volumes:
           - rd-mariadb-volume:/var/lib/mysql
