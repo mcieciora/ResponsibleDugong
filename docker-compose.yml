@@ -82,8 +82,8 @@ services:
           - .env
       healthcheck:
           test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $$MYSQL_USER --password=$$MYSQL_PASSWORD"]
-          interval: 2s
-          start_period: 30s
+          interval: 5s
+          start_period: 45s
       restart: unless-stopped
 networks:
   service_network:

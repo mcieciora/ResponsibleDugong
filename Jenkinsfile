@@ -5,7 +5,7 @@ pipeline {
     environment {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
         DOCKERHUB_TAG = "no_tag"
-        SCOUT_VERSION = "1.14.0"
+        SCOUT_VERSION = "1.16.3"
         SHELLCHECK_VERSION = "v0.10.0"
     }
     stages {
@@ -61,7 +61,7 @@ pipeline {
             steps {
                 script {
                     sh "chmod +x scripts/app_health_check.sh"
-                    sh "scripts/app_health_check.sh 45 6"
+                    sh "scripts/app_health_check.sh 60 6"
                 }
             }
             post {
