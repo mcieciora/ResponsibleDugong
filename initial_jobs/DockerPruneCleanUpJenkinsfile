@@ -1,6 +1,6 @@
 pipeline {
     parameters {
-        choice(name: 'NODE', choices: ['Amy', 'Betty'], description: 'Run on specific node')
+        choice(name: 'NODE', choices: ['Amy', 'Betty'], description: 'Run on specific node.')
     }
     triggers {
         parameterizedCron('''
@@ -27,9 +27,9 @@ pipeline {
                 stages {
                     stage('Docker cleanup') {
                         steps {
-                            echo "Do Build for ${NODE}"
                             script {
-                                sh "docker images | wc -l"
+                                sh "chmod +x scripts/docker_prune_clean_up.sh"
+                                sh "scripts/docker_prune_clean_up.sh
                             }
                         }
                     }
