@@ -9,7 +9,7 @@ sleep "$CHECK_TIME"
 
 VALUE=$(docker ps --format "{{.Names}}" | grep -c "rd_*")
 
-docker logs mariadb
+docker logs rd_mariadb
 
 if [ "$VALUE" -eq "$EXPECTED_VALUE" ]; then
   exit 0
