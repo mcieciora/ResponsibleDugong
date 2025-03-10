@@ -61,7 +61,7 @@ pipeline {
             steps {
                 script {
                     sh "chmod +x scripts/app_health_check.sh"
-                    sh "scripts/app_health_check.sh 60 6"
+                    sh "scripts/app_health_check.sh 30 6"
                 }
             }
             post {
