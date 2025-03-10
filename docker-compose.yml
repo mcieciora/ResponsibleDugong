@@ -81,7 +81,7 @@ services:
       env_file:
           - .env
       healthcheck:
-        test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect"]
+        test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
         start_period: 10s
         interval: 10s
         timeout: 5s
