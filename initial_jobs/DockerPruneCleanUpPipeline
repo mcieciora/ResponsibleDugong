@@ -1,4 +1,4 @@
-pipelineJob("DockerPruneCleanUp") {
+pipelineJob("DockerPruneCleanUpPipeline") {
     parameters {
         choiceParam("NODE", ['Amy', 'Betty'], "Node name or label.")
     }
