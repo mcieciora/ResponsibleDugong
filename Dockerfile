@@ -17,3 +17,5 @@ RUN apk --no-cache add \
     openrc=0.55.1-r2 \
     jq=1.7.1-r0 \
     && rc-update add docker default
+
+USER jenkins

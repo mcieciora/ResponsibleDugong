@@ -1,14 +1,4 @@
 services:
-  registry:
-    image: registry:2
-    container_name: rd_registry
-    ports:
-      - "5000:5000"
-    volumes:
-      - rd-registry-volume:/var/lib/registry:rw
-    networks:
-      - service_network
-    restart: always
   jenkins:
     image: rd_jenkins
     build: .
@@ -22,6 +12,18 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - .env
+    networks:
+      - service_network
+    user:
+      root
+    restart: always
+  registry:
+    image: registry:2
+    container_name: rd_registry
+    ports:
+      - "5000:5000"
+    volumes:
+      - rd-registry-volume:/var/lib/registry:rw
     networks:
       - service_network
     restart: always
