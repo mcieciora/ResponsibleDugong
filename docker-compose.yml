@@ -74,7 +74,7 @@ services:
               condition: service_healthy
       restart: unless-stopped
   mariadb:
-      image: mariadb:lts
+      image: mariadb:11.4
       container_name: rd_mariadb
       volumes:
         - rd-mariadb-volume:/var/lib/mysql
