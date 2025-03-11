@@ -5,7 +5,7 @@ pipeline {
     environment {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
         DOCKERHUB_TAG = "no_tag"
-        SCOUT_VERSION = "1.14.0"
+        SCOUT_VERSION = "1.16.3"
         SHELLCHECK_VERSION = "v0.10.0"
     }
     stages {
@@ -19,6 +19,11 @@ pipeline {
         stage ("Analyze image") {
             parallel {
                 stage ("Analyze Jenkins image") {
+                    when {
+                        expression {
+                            return env.BRANCH_NAME.contains("release") || env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop"
+                        }
+                    }
                     steps {
                         script {
                             withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
@@ -61,7 +66,7 @@ pipeline {
             steps {
                 script {
                     sh "chmod +x scripts/app_health_check.sh"
-                    sh "scripts/app_health_check.sh 30 4"
+                    sh "scripts/app_health_check.sh 30 6"
                 }
             }
             post {

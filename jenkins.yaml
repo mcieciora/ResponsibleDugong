@@ -1,5 +1,5 @@
 jenkins:
-  systemMessage: "Welcome to Jenkins! Hope you will have great time here.<br><br>Services shortcuts:<br><a href='http://localhost:9000/' target='_blank'>Portainer</a> | <a href='http://localhost:3000/' target='_blank'>Grafana</a> | <a href='http://localhost:9090/' target='_blank'>Prometheus</a> | <a href='http://localhost:5000/v2' target='_blank'>Registry</a>"
+  systemMessage: "Welcome to Jenkins! Hope you will have great time here.<br><br>Services shortcuts:<br><a href='http://localhost:3456' target='_blank'>Vikunja</a> | <a href='http://localhost:9000/' target='_blank'>Portainer</a> | <a href='http://localhost:3000/' target='_blank'>Grafana</a> | <a href='http://localhost:9090/' target='_blank'>Prometheus</a> | <a href='http://localhost:5000/v2' target='_blank'>Registry</a>"
   numExecutors: 3
   markupFormatter:
     rawHtml:
