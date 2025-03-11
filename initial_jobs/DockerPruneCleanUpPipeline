@@ -9,7 +9,7 @@ pipelineJob("DockerPruneCleanUpPipeline") {
                     remote {
                         url("https://github.com/mcieciora/ResponsibleDugong.git")
                     }
-                    branch('*/feature/docker_nodes_cleanup')
+                    branch('*/develop')
                 }
             }
             scriptPath("initial_jobs/DockerPruneCleanUpJenkinsfile")
