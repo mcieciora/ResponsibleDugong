@@ -1,0 +1,41 @@
+pipeline {
+    parameters {
+        choice(name: 'NODE', choices: ['Amy', 'Betty'], description: 'Run on specific node.')
+    }
+    triggers {
+        parameterizedCron('''
+            H 0 * * * %NODE=Amy
+            H 0 * * * %NODE=Betty
+        ''')
+    }
+    agent none
+    stages {
+        stage('BuildAndTest') {
+            matrix {
+                agent {
+                    label "${NODE}"
+                }
+                when { 
+                    expression { params.NODE == env.NODE }
+                }
+                axes {
+                    axis {
+                        name 'NODE'
+                        values 'Amy', 'Betty'
+                    }
+                }
+                stages {
+                    stage('Docker cleanup') {
+                        steps {
+                            script {
+                                sh "chmod +x scripts/docker_prune_clean_up.sh"
+                                sh "scripts/docker_prune_clean_up.sh
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

@@ -81,7 +81,7 @@ function test_jenkins_setup_utilities() {
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
   sleep 30
   echo "Finished waiting."
-  EXPECTED_JOBS_ARRAY=("MultibranchPipeline_ResponsibleDugong" "CheckForNewestJenkinsVersionPipeline" "NodeSetupPipeline" "GenerateCRUMBPipeline" )
+  EXPECTED_JOBS_ARRAY=("MultibranchPipeline_ResponsibleDugong" "CheckForNewestJenkinsVersionPipeline" "NodeSetupPipeline" "GenerateCRUMBPipeline" "DockerPruneCleanUpPipeline")
   echo "Getting list of all jobs..."
   MAIN_PAGE=$(curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$MAIN_PAGE" > "main_page.json"
@@ -125,6 +125,7 @@ function clear_build_queue() {
   sleep 10
 }
 
+# shellcheck source=/dev/null
 source .env
 
 echo "Launching Jenkins instance..."
