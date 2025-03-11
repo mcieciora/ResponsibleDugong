@@ -10,6 +10,7 @@ sleep "$CHECK_TIME"
 VALUE=$(docker ps --format "{{.Names}}" | grep -c "rd_*")
 
 docker logs rd_mariadb
+docker logs vikunja
 
 if [ "$VALUE" -eq "$EXPECTED_VALUE" ]; then
   exit 0
