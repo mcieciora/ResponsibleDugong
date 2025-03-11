@@ -36,7 +36,7 @@ services:
     volumes:
       - rd-portainer-volume:/data
       - /var/run/docker.sock:/var/run/docker.sock
-    restart: unless-stopped
+    restart: always
   prometheus:
     image: prom/prometheus:v3.2.1
     container_name: rd_prometheus
@@ -47,7 +47,7 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - service_network
-    restart: unless-stopped
+    restart: always
   grafana:
     image: grafana/grafana:11.5.2
     container_name: rd_grafana
@@ -59,7 +59,7 @@ services:
       - .env
     networks:
       - service_network
-    restart: unless-stopped
+    restart: always
   vikunja:
       image: vikunja/vikunja:0.24.6
       container_name: rd_vikunja
@@ -72,7 +72,7 @@ services:
       depends_on:
           mariadb:
               condition: service_healthy
-      restart: unless-stopped
+      restart: always
   mariadb:
       image: mariadb:lts
       container_name: rd_mariadb
@@ -86,7 +86,7 @@ services:
         interval: 10s
         timeout: 5s
         retries: 3
-      restart: unless-stopped
+      restart: always
 networks:
   service_network:
       name: jenkins_network
