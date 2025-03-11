@@ -40,7 +40,7 @@ function generate_crumb_and_token() {
 function test_setup_dsl_job() {
   curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
-  sleep 30
+  sleep 15
   echo "Finished waiting."
   EXPECTED_JOBS_ARRAY=("SetupDSLJobs" "PythonDependenciesVerification_CarelessVaquita"
   "MultibranchPipeline_CarelessVaquita" "ScanDockerImages_CarelessVaquita" "ParametrizedTestPipeline_CarelessVaquita")
@@ -79,7 +79,7 @@ function test_setup_dsl_job() {
 function test_jenkins_setup_utilities() {
   curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET&PROJECT_URL=https://github.com/mcieciora/ResponsibleDugong.git&PROJECT_NAME=ResponsibleDugong&BRANCH_NAME=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
-  sleep 30
+  sleep 15
   echo "Finished waiting."
   EXPECTED_JOBS_ARRAY=("MultibranchPipeline_ResponsibleDugong" "CheckForNewestJenkinsVersionPipeline" "NodeSetupPipeline" "GenerateCRUMBPipeline" "DockerPruneCleanUpPipeline")
   echo "Getting list of all jobs..."
@@ -130,8 +130,6 @@ source .env
 
 echo "Launching Jenkins instance..."
 docker compose up -d jenkins
-echo "Sleeping for 5 seconds before checking boot status..."
-sleep 5
 
 wait_for_jenkins_instance
 generate_crumb_and_token
