@@ -125,6 +125,7 @@ function clear_build_queue() {
   sleep 10
 }
 
+# shellcheck source=/dev/null
 source .env
 
 echo "Launching Jenkins instance..."
