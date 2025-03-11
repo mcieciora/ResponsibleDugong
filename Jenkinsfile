@@ -6,6 +6,7 @@ pipeline {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
         DOCKERHUB_TAG = "no_tag"
         SCOUT_VERSION = "1.14.0"
+        SHELLCHECK_VERSION = "v0.10.0"
     }
     stages {
         stage ("Build Jenkins image") {
@@ -35,6 +36,14 @@ pipeline {
                         script {
                             sh "chmod +x scripts/lint_docker_files.sh"
                             sh "scripts/lint_docker_files.sh"
+                        }
+                    }
+                }
+                stage ("Shellcheck") {
+                    steps {
+                        script {
+                            sh "chmod +x scripts/lint_shell_scripts.sh"
+                            sh "scripts/lint_shell_scripts.sh"
                         }
                     }
                 }
