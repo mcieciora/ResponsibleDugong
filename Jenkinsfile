@@ -19,6 +19,11 @@ pipeline {
         stage ("Analyze image") {
             parallel {
                 stage ("Analyze Jenkins image") {
+                    when {
+                        expression {
+                            return env.BRANCH_NAME.contains("release") || env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop"
+                        }
+                    }
                     steps {
                         script {
                             withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {

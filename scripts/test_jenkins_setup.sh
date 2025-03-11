@@ -39,8 +39,8 @@ function generate_crumb_and_token() {
 
 function test_setup_dsl_job() {
   curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET" --user "$JENKINS_USER:$TOKEN"
-  echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
-  sleep 15
+  echo "Sleeping for 20 seconds to let SetupDSLJobs finish..."
+  sleep 20
   echo "Finished waiting."
   EXPECTED_JOBS_ARRAY=("SetupDSLJobs" "PythonDependenciesVerification_CarelessVaquita"
   "MultibranchPipeline_CarelessVaquita" "ScanDockerImages_CarelessVaquita" "ParametrizedTestPipeline_CarelessVaquita")
@@ -78,8 +78,8 @@ function test_setup_dsl_job() {
 
 function test_jenkins_setup_utilities() {
   curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET&PROJECT_URL=https://github.com/mcieciora/ResponsibleDugong.git&PROJECT_NAME=ResponsibleDugong&BRANCH_NAME=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
-  echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
-  sleep 15
+  echo "Sleeping for 20 seconds to let SetupDSLJobs finish..."
+  sleep 20
   echo "Finished waiting."
   EXPECTED_JOBS_ARRAY=("MultibranchPipeline_ResponsibleDugong" "CheckForNewestJenkinsVersionPipeline" "NodeSetupPipeline" "GenerateCRUMBPipeline" "DockerPruneCleanUpPipeline")
   echo "Getting list of all jobs..."
@@ -100,8 +100,8 @@ function test_jenkins_setup_utilities() {
 
 function test_on_next_jenkins_build_pipeline() {
   curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/buildWithParameters?delay=0sec&token=$SECRET&BRANCH=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
-  echo "Sleeping for 15 seconds to let TestOnNextJenkinsBuildPipeline finish..."
-  sleep 15
+  echo "Sleeping for 10 seconds to let TestOnNextJenkinsBuildPipeline finish..."
+  sleep 10
   echo "Finished waiting."
   BUILD_RESULT=$(curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/1/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$BUILD_RESULT" > "build_result.json"
