@@ -2,7 +2,7 @@
 Responsible Dugong is an <i>open source setup of Jenkins instance preconfigured as a code.</i> This project is closely correlated to: [CarelessVaquita](https://github.com/mcieciora/CarelessVaquita)
 
 Currently supported versions of the services:
--  Jenkins 2.499 with plugins (versioned as 0.5.1):
+-  Jenkins 2.500 with plugins (versioned as 0.5.1):
     - configuration-as-code
     - role-strategy
     - blueocean 

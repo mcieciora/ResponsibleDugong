@@ -18,9 +18,9 @@ pipeline {
                 }
             }
         }
-        stage ("Analyze image") {
+        stage ("Linters") {
             parallel {
-                stage ("Lint Docker files") {
+                stage ("Lint Dockerfiles") {
                     steps {
                         script {
                             sh "chmod +x scripts/lint_docker_files.sh"
