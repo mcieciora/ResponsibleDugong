@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Running docker trivy on jenkins_test_image image"
-docker run --rm aquasec/trivy:"$TRIVY_VERSION" image jenkins_test_image > scan_trivy_jenkins.txt
+docker run --rm -u root -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:"$TRIVY_VERSION" image jenkins_test_image > scan_trivy_jenkins.txt
 grep "HIGH: 0" scan_trivy_jenkins.txt
 HIGH_VULNERABILITIES=$?
 grep "CRITICAL: 0" scan_trivy_jenkins.txt
