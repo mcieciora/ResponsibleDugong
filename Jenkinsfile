@@ -130,7 +130,7 @@ pipeline {
         always {
             sh "docker logout"
             sh "docker compose down --rmi all -v"
-            archiveArtifacts artifacts: "scan_*", followSymlinks: false
+            archiveArtifacts artifacts: "scan_*", followSymlinks: false, allowEmptyArchive: true
             cleanWs()
         }
     }
