@@ -39,11 +39,11 @@ pipeline {
             }
         }
         stage ("Analyze image") {
-//             when {
-//                 expression {
-//                     return env.BRANCH_NAME.contains("release") || env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop"
-//                 }
-//             }
+            when {
+                expression {
+                    return env.BRANCH_NAME.contains("release") || env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop"
+                }
+            }
             parallel {
                 stage ("docker scout") {
                     steps {
