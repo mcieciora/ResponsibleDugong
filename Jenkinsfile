@@ -49,6 +49,7 @@ pipeline {
                     steps {
                         script {
                             withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
+                                sh "docker login --username $USERNAME --password $PASSWORD"
                                 sh "chmod +x scripts/scan_docker_scout.sh"
                                 return_value = sh(script: "scripts/scan_docker_scout.sh", returnStdout: true).trim()
                                 if (return_value.contains("Script failed, because vulnerabilities were found.")) {
