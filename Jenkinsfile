@@ -5,10 +5,11 @@ pipeline {
     environment {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
         DOCKERHUB_TAG = "no_tag"
+        HADOLINT_VERSION = "v2.12.0-alpine"
         SHELLCHECK_VERSION = "v0.10.0"
+        TRIVY_VERSION = "0.59.0"
         SCOUT_VERSION = "1.16.3"
         DIVE_VERSION = "v0.12"
-        TRIVY_VERSION = "0.59.0"
     }
     stages {
         stage ("Build Jenkins image") {
