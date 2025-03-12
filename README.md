@@ -20,7 +20,17 @@ Currently supported versions of the services:
 - Grafana 11.5.2
 - Registry 2.8
 - Portainer-ce 2.27.1
-- Prometheys 3.2.1
+- Prometheus 3.2.1
+
+Currently supported versions of the tools:
+- Docker 27.3.1
+- Docker Compose 2.31.0
+- jq 1.7.1
+- hadolint v2.12.0-alpine
+- shellcheck v0.10.0
+- trivy 0.59.0
+- docker scout 1.16.3
+- dive v0.12
 
 <h2>About Dugong</h2>  
 Dugong <i>(Dugong dugon)</i>  is a large, grey brown bulbous animal with a flattened fluked tail, like that of a whale, no dorsal fin, paddle like flippers and distinctive head shape. 
