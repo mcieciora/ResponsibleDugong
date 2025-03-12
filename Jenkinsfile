@@ -8,7 +8,7 @@ pipeline {
         SHELLCHECK_VERSION = "v0.10.0"
         SCOUT_VERSION = "1.16.3"
         DIVE_VERSION = "v0.12"
-        TRIVY_VERSION = "0.60.0"
+        TRIVY_VERSION = "0.59.0"
     }
     stages {
         stage ("Build Jenkins image") {
@@ -39,11 +39,11 @@ pipeline {
             }
         }
         stage ("Analyze image") {
-            when {
-                expression {
-                    return env.BRANCH_NAME.contains("release") || env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop"
-                }
-            }
+//             when {
+//                 expression {
+//                     return env.BRANCH_NAME.contains("release") || env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop"
+//                 }
+//             }
             parallel {
                 stage ("docker scout") {
                     steps {
