@@ -1,4 +1,4 @@
-pipelineJob("DockerhubImageCleanUpPipeline") {
+pipelineJob("DockerhubImageCleanUp_ResponsibleDugong") {
     triggers {
         cron("H 23 * * *")
     }
@@ -12,7 +12,7 @@ pipelineJob("DockerhubImageCleanUpPipeline") {
                     branch('*/develop')
                 }
             }
-            scriptPath("initial_jobs/DockerhubImageCleanUpJenkinsfile")
+            scriptPath("DockerhubImageCleanUpJenkinsfile")
             lightweight()
         }
     }
