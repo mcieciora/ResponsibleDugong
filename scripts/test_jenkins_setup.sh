@@ -55,24 +55,6 @@ function test_initial_job() {
   done
 }
 
-function test_merge_bot_dir() {
-  EXPECTED_JOBS_ARRAY=("MergeBot_CarelessVaquita" "PromoteBranch_CarelessVaquita")
-  echo "Getting list of all jobs..."
-  MAIN_PAGE=$(curl "$JENKINS_URL/view/CarelessVaquita/job/MergeBot_CarelessVaquita/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
-  echo "$MAIN_PAGE" > "main_page.json"
-
-  for JOB in "${EXPECTED_JOBS_ARRAY[@]}"; do
-    jq -r ".jobs[].name" main_page.json | grep "$JOB"
-    RET_VAL=$?
-    if [ $RET_VAL -ne 0 ]; then
-      echo "$JOB job is missing in Jenkins instance."
-      exit 1
-    else
-      echo "pass"
-    fi
-  done
-}
-
 function test_setup_dsl_job() {
   curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
@@ -106,6 +88,24 @@ function test_setup_dsl_job() {
     RET_VAL=$?
     if [ $RET_VAL -ne 0 ]; then
       echo "$BRANCH branch is missing in Jenkins instance."
+      exit 1
+    else
+      echo "pass"
+    fi
+  done
+}
+
+function test_merge_bot_dir() {
+  EXPECTED_JOBS_ARRAY=("MergeBot_CarelessVaquita" "PromoteBranch_CarelessVaquita")
+  echo "Getting list of all jobs..."
+  MAIN_PAGE=$(curl "$JENKINS_URL/view/CarelessVaquita/job/MergeBot_CarelessVaquita/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
+  echo "$MAIN_PAGE" > "main_page.json"
+
+  for JOB in "${EXPECTED_JOBS_ARRAY[@]}"; do
+    jq -r ".jobs[].name" main_page.json | grep "$JOB"
+    RET_VAL=$?
+    if [ $RET_VAL -ne 0 ]; then
+      echo "$JOB job is missing in Jenkins instance."
       exit 1
     else
       echo "pass"
@@ -171,7 +171,7 @@ docker compose up -d jenkins
 wait_for_jenkins_instance
 generate_crumb_and_token
 test_initial_job
-test_merge_bot_dir
 test_setup_dsl_job
+test_merge_bot_dir
 test_jenkins_setup_utilities
 test_on_next_jenkins_build_pipeline
