@@ -1,6 +1,9 @@
 jenkins:
-  systemMessage: "Welcome to Jenkins! Hope you will have great time here."
+  systemMessage: "Welcome to Jenkins! Hope you will have great time here.<br><br>Services shortcuts:<br><a href='http://localhost:3456' target='_blank'>Vikunja</a> | <a href='http://localhost:9000/' target='_blank'>Portainer</a> | <a href='http://localhost:3000/' target='_blank'>Grafana</a> | <a href='http://localhost:9090/' target='_blank'>Prometheus</a> | <a href='http://localhost:5000/v2' target='_blank'>Registry</a>"
   numExecutors: 3
+  markupFormatter:
+    rawHtml:
+      disableSyntaxHighlighting: false
   mode: NORMAL
   scmCheckoutRetryCount: 1
   labelString: "master"
@@ -28,9 +31,33 @@ jobs:
   - file: /root/casc/initial_jobs/SetupDSLJobs
   - file: /root/casc/initial_jobs/GenerateCRUMBPipeline
   - file: /root/casc/initial_jobs/NodeSetupPipeline
+  - file: /root/casc/initial_jobs/DockerPruneCleanUpPipeline
 security:
   globalJobDslSecurityConfiguration:
     useScriptSecurity: false
 unclassified:
   location:
     url: ${JENKINS_URL}
+  prometheusConfiguration:
+      appendParamLabel: false
+      appendStatusLabel: false
+      collectCodeCoverage: false
+      collectDiskUsage: false
+      collectNodeStatus: true
+      collectingMetricsPeriodInSeconds: 120
+      countAbortedBuilds: true
+      countFailedBuilds: true
+      countNotBuiltBuilds: true
+      countSuccessfulBuilds: true
+      countUnstableBuilds: true
+      defaultNamespace: "default"
+      disabledMetricConfig:
+        entries:
+        - regexDisabledMetric:
+            regex: "(?!default_jenkins_builds_build_result_ordinal)default_jenkins_builds.*"
+      fetchTestResults: true
+      jobAttributeName: "jenkins_job"
+      path: "prometheus"
+      perBuildMetrics: true
+      processingDisabledBuilds: false
+      useAuthenticatedEndpoint: false

@@ -7,3 +7,6 @@ rebuild:latest
 parameterized-scheduler:latest
 job-dsl:latest
 ws-cleanup:latest
+pipeline-graph-view:latest
+pipeline-stage-view:latest
+prometheus:latest

@@ -5,7 +5,11 @@ pipeline {
     environment {
         DOCKERHUB_REPO = "mcieciora/responsible_dugong"
         DOCKERHUB_TAG = "no_tag"
-        SCOUT_VERSION = "1.14.0"
+        HADOLINT_VERSION = "v2.12.0-alpine"
+        SHELLCHECK_VERSION = "v0.10.0"
+        TRIVY_VERSION = "0.59.0"
+        SCOUT_VERSION = "1.16.3"
+        DIVE_VERSION = "v0.12"
     }
     stages {
         stage ("Build Jenkins image") {
@@ -15,14 +19,66 @@ pipeline {
                 }
             }
         }
+        stage ("Linters") {
+            parallel {
+                stage ("Lint Dockerfiles") {
+                    steps {
+                        script {
+                            sh "chmod +x scripts/lint_docker_files.sh"
+                            sh "scripts/lint_docker_files.sh"
+                        }
+                    }
+                }
+                stage ("Shellcheck") {
+                    steps {
+                        script {
+                            sh "chmod +x scripts/lint_shell_scripts.sh"
+                            sh "scripts/lint_shell_scripts.sh"
+                        }
+                    }
+                }
+            }
+        }
         stage ("Analyze image") {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
-                        sh "chmod +x scripts/scan_jenkins_image.sh"
-                        return_value = sh(script: "scripts/scan_jenkins_image.sh", returnStdout: true).trim()
-                        if (return_value.contains("Script failed, because vulnerabilities were found.")) {
-                            unstable(return_value)
+            when {
+                expression {
+                    return env.BRANCH_NAME.contains("release") || env.BRANCH_NAME == "master" || env.BRANCH_NAME == "develop"
+                }
+            }
+            parallel {
+                stage ("docker scout") {
+                    steps {
+                        script {
+                            withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
+                                sh "docker login --username $USERNAME --password $PASSWORD"
+                                sh "chmod +x scripts/scan_docker_scout.sh"
+                                return_value = sh(script: "scripts/scan_docker_scout.sh", returnStdout: true).trim()
+                                if (return_value.contains("Script failed, because vulnerabilities were found.")) {
+                                    unstable(return_value)
+                                }
+                            }
+                        }
+                    }
+                }
+                stage ("trivy") {
+                    steps {
+                        script {
+                            sh "chmod +x scripts/scan_docker_trivy.sh"
+                            return_value = sh(script: "scripts/scan_docker_trivy.sh", returnStdout: true).trim()
+                            if (return_value.contains("Script failed, because vulnerabilities were found.")) {
+                                unstable(return_value)
+                            }
+                        }
+                    }
+                }
+                stage ("dive") {
+                    steps {
+                        script {
+                            sh "chmod +x scripts/scan_docker_dive.sh"
+                            return_value = sh(script: "scripts/scan_docker_dive.sh", returnStdout: true).trim()
+                            if (return_value.contains("Script failed, because vulnerabilities were found.")) {
+                                unstable(return_value)
+                            }
                         }
                     }
                 }
@@ -72,7 +128,9 @@ pipeline {
     }
     post {
         always {
+            sh "docker logout"
             sh "docker compose down --rmi all -v"
+            archiveArtifacts artifacts: "scan_*", followSymlinks: false, allowEmptyArchive: true
             cleanWs()
         }
     }

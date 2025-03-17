@@ -37,13 +37,32 @@ function generate_crumb_and_token() {
   echo "Token is: $TOKEN"
 }
 
+function test_initial_job() {
+  EXPECTED_JOBS_ARRAY=("DockerPruneCleanUpPipeline" "GenerateCRUMBPipeline" "NodeSetupPipeline" "SetupDSLJobs")
+  echo "Getting list of all jobs..."
+  MAIN_PAGE=$(curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
+  echo "$MAIN_PAGE" > "main_page.json"
+
+  for JOB in "${EXPECTED_JOBS_ARRAY[@]}"; do
+    jq -r ".jobs[].name" main_page.json | grep "$JOB"
+    RET_VAL=$?
+    if [ $RET_VAL -ne 0 ]; then
+      echo "$JOB job is missing in Jenkins instance."
+      exit 1
+    else
+      echo "pass"
+    fi
+  done
+}
+
 function test_setup_dsl_job() {
   curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
   sleep 30
   echo "Finished waiting."
-  EXPECTED_JOBS_ARRAY=("SetupDSLJobs" "PythonDependenciesVerification_CarelessVaquita"
-  "MultibranchPipeline_CarelessVaquita" "ScanDockerImages_CarelessVaquita" "ParametrizedTestPipeline_CarelessVaquita")
+  EXPECTED_JOBS_ARRAY=("BuildAndPushDockerImage_CarelessVaquita" "DockerhubImageCleanUp_CarelessVaquita"
+  "MultibranchPipeline_CarelessVaquita" "MergeBot_CarelessVaquita" "NightlyTestPipeline_CarelessVaquita" "ParametrizedTestPipeline_CarelessVaquita"
+  "PythonDependenciesVerification_CarelessVaquita" "ScanDockerImages_CarelessVaquita")
   echo "Getting list of all jobs..."
   MAIN_PAGE=$(curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$MAIN_PAGE" > "main_page.json"
@@ -76,12 +95,30 @@ function test_setup_dsl_job() {
   done
 }
 
+function test_merge_bot_dir() {
+  EXPECTED_JOBS_ARRAY=("MergeBot_CarelessVaquita" "PromoteBranch_CarelessVaquita")
+  echo "Getting list of all jobs..."
+  MAIN_PAGE=$(curl "$JENKINS_URL/view/CarelessVaquita/job/MergeBot_CarelessVaquita/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
+  echo "$MAIN_PAGE" > "main_page.json"
+
+  for JOB in "${EXPECTED_JOBS_ARRAY[@]}"; do
+    jq -r ".jobs[].name" main_page.json | grep "$JOB"
+    RET_VAL=$?
+    if [ $RET_VAL -ne 0 ]; then
+      echo "$JOB job is missing in Jenkins instance."
+      exit 1
+    else
+      echo "pass"
+    fi
+  done
+}
+
 function test_jenkins_setup_utilities() {
   curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET&PROJECT_URL=https://github.com/mcieciora/ResponsibleDugong.git&PROJECT_NAME=ResponsibleDugong&BRANCH_NAME=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
   sleep 30
   echo "Finished waiting."
-  EXPECTED_JOBS_ARRAY=("MultibranchPipeline_ResponsibleDugong" "CheckForNewestJenkinsVersionPipeline" "NodeSetupPipeline" "GenerateCRUMBPipeline" )
+  EXPECTED_JOBS_ARRAY=("MultibranchPipeline_ResponsibleDugong" "CheckForNewestJenkinsVersionPipeline" "TestOnNextJenkinsBuildPipeline" "DockerhubImageCleanUp_ResponsibleDugong")
   echo "Getting list of all jobs..."
   MAIN_PAGE=$(curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$MAIN_PAGE" > "main_page.json"
@@ -100,8 +137,8 @@ function test_jenkins_setup_utilities() {
 
 function test_on_next_jenkins_build_pipeline() {
   curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/buildWithParameters?delay=0sec&token=$SECRET&BRANCH=$BRANCH_NAME" --user "$JENKINS_USER:$TOKEN"
-  echo "Sleeping for 15 seconds to let TestOnNextJenkinsBuildPipeline finish..."
-  sleep 15
+  echo "Sleeping for 10 seconds to let TestOnNextJenkinsBuildPipeline finish..."
+  sleep 10
   echo "Finished waiting."
   BUILD_RESULT=$(curl "$JENKINS_URL/job/TestOnNextJenkinsBuildPipeline/1/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$BUILD_RESULT" > "build_result.json"
@@ -114,16 +151,27 @@ function test_on_next_jenkins_build_pipeline() {
   fi
 }
 
+function clear_build_queue() {
+  echo "Clearing out build queue..."
+  curl -g --user "$JENKINS_USER:$TOKEN" "$JENKINS_URL/api/json?tree=jobs[builds[building,url]]" > "running_builds.json"
+  for URL in $(jq -r "try (.jobs[].builds[] | select (.building==true) | .url) catch false" "running_builds.json" | sed -e "s/\r//")
+  do
+    curl -X POST "$URL"stop --user "$JENKINS_USER:$TOKEN" || echo "$URL" failed to stop
+  done
+  echo "Sleeping for 10 seconds to let Jenkins update the queue..."
+  sleep 10
+}
+
+# shellcheck source=/dev/null
 source .env
 
 echo "Launching Jenkins instance..."
 docker compose up -d jenkins
-echo "Sleeping for 5 seconds before checking boot status..."
-sleep 5
 
 wait_for_jenkins_instance
 generate_crumb_and_token
+test_initial_job
 test_setup_dsl_job
-# Disable utilities and next jenkins build testing
-# test_jenkins_setup_utilities
-# test_on_next_jenkins_build_pipeline
+test_merge_bot_dir
+test_jenkins_setup_utilities
+test_on_next_jenkins_build_pipeline

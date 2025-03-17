@@ -1,16 +1,36 @@
 <h2>What is <i>ResponsibleDugong</i></h2>  
-Responsible Dugong is an <i>open source setup of Jenkins instance preconfigured as a code.</i> This project is closely correlated to:
+Responsible Dugong is an <i>open source setup of Jenkins instance preconfigured as a code.</i> This project is closely correlated to: [CarelessVaquita](https://github.com/mcieciora/CarelessVaquita)
 
-[CarelessVaquita](https://github.com/mcieciora/CarelessVaquita)
+Currently supported versions of the services:
+-  Jenkins 2.500 with plugins (versioned as 0.5.1):
+    - configuration-as-code
+    - role-strategy
+    - blueocean 
+    - docker-plugin 
+    - docker-workflow 
+    - rebuild 
+    - parameterized-scheduler 
+    - job-dsl 
+    - ws-cleanup 
+    - pipeline-graph-view 
+    - pipeline-stage-view 
+    - prometheus
+- Vinkunja 0.24.6
+- MariaDB 11.7.2
+- Grafana 11.5.2
+- Registry 2.8
+- Portainer-ce 2.27.1
+- Prometheus 3.2.1
 
-Currently supported tools and versions:
-
-- Jenkins 2.486
-  - additional plugins listed in casc/plugins.txt
-
-- Docker 24.0.0+ & DockerCompose 2.22.0
-
-- groovy 4.0.18+
+Currently supported versions of the tools:
+- Docker 27.3.1
+- Docker Compose 2.31.0
+- jq 1.7.1
+- hadolint v2.12.0-alpine
+- shellcheck v0.10.0
+- trivy 0.59.0
+- docker scout 1.16.3
+- dive v0.12
 
 <h2>About Dugong</h2>  
 Dugong <i>(Dugong dugon)</i>  is a large, grey brown bulbous animal with a flattened fluked tail, like that of a whale, no dorsal fin, paddle like flippers and distinctive head shape. 
@@ -102,6 +122,11 @@ After logging into your Jenkins instance there should be a job called "SetupDSLJ
 <b>NOTE:</b> It is not mandatory to run SetupDSLJobs on project, that is forked CarelessVaquita project. It is not even required to have the same files structure, but the only directory that <b>must</b> exist is <i>jobs</i>, where pipelines declaration should be defined.
 
 If you are using CarelessVaquita as template project, remember about setting _user.email_ and _user.name_ with git config --global command inside Jenkins instance.
+
+<h3>Services</h3>
+Easy access to all the links to external services mentioned at the top of this README file are available at the top of the Jenkins page:
+
+![services.png](doc/services.PNG)
 
 Happy Dugonging ;)  
 
