@@ -1,7 +1,6 @@
-pipelineJob("TestOnNextJenkinsBuildPipeline") {
-    authenticationToken("INPUT.SECRET")
-    parameters {
-        stringParam("BRANCH", "develop", "Execution branch.")
+pipelineJob("DockerhubImageCleanUp_ResponsibleDugong") {
+    triggers {
+        cron("H 23 * * *")
     }
     definition {
         cpsScm {
@@ -10,10 +9,10 @@ pipelineJob("TestOnNextJenkinsBuildPipeline") {
                     remote {
                         url("https://github.com/mcieciora/ResponsibleDugong.git")
                     }
-                    branch('*/${BRANCH}')
+                    branch('*/develop')
                 }
             }
-            scriptPath("TestOnNextJenkinsBuildJenkinsfile")
+            scriptPath("DockerhubImageCleanUpJenkinsfile")
             lightweight()
         }
     }
