@@ -6,7 +6,7 @@ pipelineJob("CheckForNewestJenkinsVersionPipeline") {
                     remote {
                         url("https://github.com/mcieciora/ResponsibleDugong.git")
                     }
-                     branch('*/develop')
+                    branch('*/develop')
                 }
             }
             scriptPath("CheckForNewestJenkinsVersionJenkinsfile")
