@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROTECTED_TAGS=("latest" "merge_bot" "test_image")
+PROTECTED_TAGS=("latest" "develop")
 CURRENT_DATE=$(date +%s)
 
 echo "{'username': $USERNAME, 'password': $PASSWORD}" > token_creds.json
