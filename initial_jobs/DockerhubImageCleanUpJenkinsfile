@@ -21,7 +21,7 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: "agent_${NODE_NAME}", keyFileVariable: "key")]) {
                         sh 'GIT_SSH_COMMAND="ssh -i $key"'
-                        git branch: env.BRANCH, url: REPO_URL
+                        git branch: "feature/remove_old_images_from_dockerhub", url: REPO_URL
                     }
                 }
             }
@@ -31,9 +31,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: "dockerhub_id", usernameVariable: "USERNAME", passwordVariable: "PASSWORD")]) {
                         sh "chmod +x scripts/delete_old_dockerhub_tags.sh"
-                        withEnv(getToolsConfig()) {
-                            return_value = sh(script: "scripts/delete_old_dockerhub_tags.sh", returnStdout: true).trim()
-                        }
+                        return_value = sh(script: "scripts/delete_old_dockerhub_tags.sh", returnStdout: true).trim()
                         if (return_value.contains("Could not delete tag")) {
                             unstable(return_value)
                         }
