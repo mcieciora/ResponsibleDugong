@@ -37,13 +37,50 @@ function generate_crumb_and_token() {
   echo "Token is: $TOKEN"
 }
 
+function test_initial_job() {
+  EXPECTED_JOBS_ARRAY=("DockerPruneCleanUpPipeline" "GenerateCRUMBPipeline" "NodeSetupPipeline" "SetupDSLJobs")
+  echo "Getting list of all jobs..."
+  MAIN_PAGE=$(curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
+  echo "$MAIN_PAGE" > "main_page.json"
+
+  for JOB in "${EXPECTED_JOBS_ARRAY[@]}"; do
+    jq -r ".jobs[].name" main_page.json | grep "$JOB"
+    RET_VAL=$?
+    if [ $RET_VAL -ne 0 ]; then
+      echo "$JOB job is missing in Jenkins instance."
+      exit 1
+    else
+      echo "pass"
+    fi
+  done
+}
+
+function test_merge_bot_dir() {
+  EXPECTED_JOBS_ARRAY=("MergeBot_CarelessVaquita" "PromoteBranch_CarelessVaquita")
+  echo "Getting list of all jobs..."
+  MAIN_PAGE=$(curl "$JENKINS_URL/view/CarelessVaquita/job/MergeBot_CarelessVaquita/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
+  echo "$MAIN_PAGE" > "main_page.json"
+
+  for JOB in "${EXPECTED_JOBS_ARRAY[@]}"; do
+    jq -r ".jobs[].name" main_page.json | grep "$JOB"
+    RET_VAL=$?
+    if [ $RET_VAL -ne 0 ]; then
+      echo "$JOB job is missing in Jenkins instance."
+      exit 1
+    else
+      echo "pass"
+    fi
+  done
+}
+
 function test_setup_dsl_job() {
   curl "$JENKINS_URL/job/SetupDSLJobs/buildWithParameters?delay=0sec&token=$SECRET" --user "$JENKINS_USER:$TOKEN"
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
   sleep 30
   echo "Finished waiting."
-  EXPECTED_JOBS_ARRAY=("SetupDSLJobs" "PythonDependenciesVerification_CarelessVaquita"
-  "MultibranchPipeline_CarelessVaquita" "ScanDockerImages_CarelessVaquita" "ParametrizedTestPipeline_CarelessVaquita")
+  EXPECTED_JOBS_ARRAY=("BuildAndPushDockerImage_CarelessVaquita" "DockerhubImageCleanUp_CarelessVaquita"
+  "MultibranchPipeline_CarelessVaquita" "MergeBot_CarelessVaquita" "NightlyTestPipeline_CarelessVaquita" "ParametrizedTestPipeline_CarelessVaquita"
+  "PythonDependenciesVerification_CarelessVaquita" "ScanDockerImages_CarelessVaquita")
   echo "Getting list of all jobs..."
   MAIN_PAGE=$(curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$MAIN_PAGE" > "main_page.json"
@@ -81,7 +118,7 @@ function test_jenkins_setup_utilities() {
   echo "Sleeping for 30 seconds to let SetupDSLJobs finish..."
   sleep 30
   echo "Finished waiting."
-  EXPECTED_JOBS_ARRAY=("MultibranchPipeline_ResponsibleDugong" "CheckForNewestJenkinsVersionPipeline" "NodeSetupPipeline" "GenerateCRUMBPipeline" "DockerPruneCleanUpPipeline" "DockerhubImageCleanUp_ResponsibleDugong")
+  EXPECTED_JOBS_ARRAY=("MultibranchPipeline_ResponsibleDugong" "CheckForNewestJenkinsVersionPipeline" "TestOnNextJenkinsBuildPipeline" "DockerhubImageCleanUp_ResponsibleDugong")
   echo "Getting list of all jobs..."
   MAIN_PAGE=$(curl "$JENKINS_URL/api/json?pretty=true" --user "$JENKINS_USER:$TOKEN")
   echo "$MAIN_PAGE" > "main_page.json"
@@ -133,6 +170,8 @@ docker compose up -d jenkins
 
 wait_for_jenkins_instance
 generate_crumb_and_token
+test_initial_job
+test_merge_bot_dir
 test_setup_dsl_job
 test_jenkins_setup_utilities
 test_on_next_jenkins_build_pipeline
