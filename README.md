@@ -123,6 +123,11 @@ After logging into your Jenkins instance there should be a job called "SetupDSLJ
 
 If you are using CarelessVaquita as template project, remember about setting _user.email_ and _user.name_ with git config --global command inside Jenkins instance.
 
+<h3>Services</h3>
+Easy access to all the links to external services mentioned at the top of this README file are available at the top of the Jenkins page:
+
+![services.png](doc/services.PNG)
+
 Happy Dugonging ;)  
 
 <i>mcieciora</i>
