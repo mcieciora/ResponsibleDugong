@@ -8,12 +8,12 @@ function add_ssh_credentials() {
      "":"2",
      "credentials":{
         "scope":"GLOBAL",
-        "id":"agent_$AGENT_NAME",
+        "id":"agent_'$AGENT_NAME'",
         "description":"",
         "username":"jenkins_server",
         "privateKeySource":{
            "value":"0",
-           "privateKey":"$(cat $SSH_PATH/id_ed25519)",
+           "privateKey":"'$(cat $SSH_PATH/id_ed25519)'",
            "stapler-class":"com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource",
            "\$class":"com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey$DirectEntryPrivateKeySource"
         },
