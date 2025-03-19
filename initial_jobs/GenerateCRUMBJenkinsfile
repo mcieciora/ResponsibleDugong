@@ -14,8 +14,6 @@ pipeline {
         stage ("Copy token.sec value") {
             steps {
                 script {
-                    sh "chmod +x scripts/add_ssh_credentials.sh"
-                    sh "scripts/add_ssh_credentials.sh github_${params.AGENT_NAME}"
                     sh "cat token.sec"
                 }
             }

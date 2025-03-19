@@ -7,7 +7,7 @@ pipeline {
         string(name: "TOKEN", defaultValue: "", description: "Provide CRUMB token.")
     }
     environment {
-        SSH_PATH="/var/jenkins_home/ssh_keys/${params.AGENT_NAME}"
+        SSH_PATH="/root/.ssh/${params.AGENT_NAME}"
     }
     stages {
         stage ("Check for existing keys") {
