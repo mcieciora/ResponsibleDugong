@@ -6,8 +6,7 @@ function add_ssh_credentials() {
   echo "Creating SSH credentials"
   PRIVATE_KEY="$(cat "$SSH_PATH"/id_ed25519)"
 
-cat <<EOF > curl_data.json
-{
+  curl -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" --user "$JENKINS_ADMIN_USER:$TOKEN" --data-urlencode 'json={
   "": "2",
   "credentials": {
     "scope": "GLOBAL",
@@ -23,10 +22,7 @@ cat <<EOF > curl_data.json
     "passphrase": "",
     "\$class": "com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey"
   }
-}
-EOF
-
-  curl -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" --user "$JENKINS_ADMIN_USER:$TOKEN" -d @curl_data.json
+}'
 }
 
 add_ssh_credentials
