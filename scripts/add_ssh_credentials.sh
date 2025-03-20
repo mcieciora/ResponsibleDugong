@@ -3,7 +3,6 @@
 set -e
 
 echo "Creating SSH credentials"
-ID_CONTENT=$(cat "$SSH_PATH"/id_ed25519)
 JSON_CONTENT=$(cat <<EOF
   {
      "":"2",
@@ -14,7 +13,7 @@ JSON_CONTENT=$(cat <<EOF
         "username":"jenkins_server",
         "privateKeySource":{
            "value":"0",
-           "privateKey":"$ID_CONTENT",
+           "privateKey":$(cat "$SSH_PATH"/id_ed25519),
            "stapler-class":"com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey\$DirectEntryPrivateKeySource",
            "\$class":"com.cloudbees.jenkins.plugins.sshcredentials.impl.BasicSSHUserPrivateKey\$DirectEntryPrivateKeySource"
         },
