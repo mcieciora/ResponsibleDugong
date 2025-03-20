@@ -4,7 +4,7 @@ set -e
 
 echo "Creating SSH credentials"
 JSON_CONTENT=$(cat <<EOF
-  {
+  json={
      "":"2",
      "credentials":{
         "scope":"GLOBAL",
