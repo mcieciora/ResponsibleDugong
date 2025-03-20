@@ -3,7 +3,7 @@
 set -e
 
 echo "Creating SSH credentials"
-ID_CONTENT=$(tr --delete "\n" "$SSH_PATH"/id_ed25519)
+ID_CONTENT=$(tr --delete '\n' < "$SSH_PATH"/id_ed25519)
 JSON_CONTENT=$(cat <<EOF
 json={
    "":"2",
