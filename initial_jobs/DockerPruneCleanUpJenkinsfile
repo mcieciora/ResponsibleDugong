@@ -29,7 +29,7 @@ pipeline {
                         steps {
                             script {
                                 sh "chmod +x scripts/docker_prune_clean_up.sh"
-                                sh "scripts/docker_prune_clean_up.sh
+                                sh "scripts/docker_prune_clean_up.sh"
                             }
                         }
                     }
