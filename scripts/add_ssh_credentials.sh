@@ -42,4 +42,4 @@ echo 'json={
    }
 }' > original_json.json
 echo "$JSON_CONTENT" > curl_data.json
-# curl -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" --user "$JENKINS_ADMIN_USER:$TOKEN" --data-binary @curl_data.json
+curl -X POST "$JENKINS_URL/credentials/store/system/domain/_/createCredentials" --user "$JENKINS_ADMIN_USER:$TOKEN" --data-binary @curl_data.json
