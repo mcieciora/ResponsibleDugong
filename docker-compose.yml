@@ -6,11 +6,12 @@ services:
       - "5000:5000"
     volumes:
       - rd-registry-volume:/var/lib/registry:rw
+      - ./registry.yml:/etc/docker/registry/config.yml
     networks:
       - service_network
     restart: always
   jenkins:
-    image: rd_jenkins:0.5.1
+    image: rd_jenkins:0.5.2
     build: .
     container_name: jenkins
     ports:
