@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.500-alpine
+FROM jenkins/jenkins:2.518-alpine
 
 USER root
 
@@ -12,10 +12,10 @@ COPY initial_jobs /root/casc/initial_jobs
 
 # Install docker and docker compose
 RUN apk --no-cache add \
-    docker=27.3.1-r3 \
-    docker-compose=2.31.0-r3 \
-    openrc=0.55.1-r2 \
-    jq=1.7.1-r0 \
+    docker=28.3.0-r0 \
+    docker-compose=2.36.2-r0 \
+    openrc=0.62.5-r0 \
+    jq=1.8.0-r0 \
     && rc-update add docker default
 
 USER jenkins
