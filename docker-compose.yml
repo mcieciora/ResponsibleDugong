@@ -1,19 +1,4 @@
 services:
-  artifactory:
-    image: releases-docker.jfrog.io/jfrog/artifactory-oss:latest
-    container_name: rd_artifactory
-    ports:
-      - "8081:8081"
-      - "8082:8082"
-    volumes:
-      - rd-artifactory-volume:/var/opt/jfrog/artifactory
-      - ./configs/artifactory.yaml:/opt/jfrog/artifactory/var/etc/system.yaml
-    depends_on:
-        postgres:
-            condition: service_healthy
-    networks:
-      - service_network
-    restart: always
   jenkins:
     image: rd_jenkins:0.5.2
     build: .
@@ -115,7 +100,6 @@ networks:
   service_network:
       name: jenkins_network
 volumes:
-  rd-artifactory-volume:
   rd-portainer-volume:
   rd-prometheus-volume:
   rd-vikunja-volume:

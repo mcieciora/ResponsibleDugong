@@ -3,7 +3,7 @@
 CHECK_TIME=$1
 EXPECTED_VALUE=$2
 
-docker compose up -d artifactory portainer prometheus grafana vikunja postgres pgadmin
+docker compose up -d portainer prometheus grafana vikunja postgres pgadmin
 echo "Sleeping for $CHECK_TIME"
 sleep "$CHECK_TIME"
 
