@@ -1,15 +1,4 @@
 services:
-  registry:
-    image: registry:2.8
-    container_name: rd_registry
-    ports:
-      - "5000:5000"
-    volumes:
-      - rd-registry-volume:/var/lib/registry:rw
-      - ./registry.yml:/etc/docker/registry/config.yml
-    networks:
-      - service_network
-    restart: always
   jenkins:
     image: rd_jenkins:0.5.2
     build: .
@@ -45,7 +34,7 @@ services:
       - "9090:9090"
     volumes:
       - rd-prometheus-volume:/prometheus
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./configs/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - service_network
     restart: always
@@ -55,7 +44,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./grafana.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./configs/grafana.yml:/etc/grafana/provisioning/datasources/datasource.yml
     env_file:
       - .env
     networks:
@@ -70,31 +59,49 @@ services:
           - rd-vikunja-volume:/app/vikunja/files
       env_file:
           - .env
+      networks:
+        - service_network
       depends_on:
-          mariadb:
+          postgres:
               condition: service_healthy
       restart: always
-  mariadb:
-      image: mariadb:lts
-      container_name: rd_mariadb
-      volumes:
-        - rd-mariadb-volume:/var/lib/mysql
-      env_file:
-          - .env
-      healthcheck:
-        test: ["CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized"]
-        start_period: 10s
-        interval: 15s
-        timeout: 5s
-        retries: 6
-      restart: always
+  postgres:
+    image: postgres:17.5
+    container_name: rd_postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - rd-postgres-volume:/var/lib/postgresql/data
+      - ./postgres_init/setup_dbs.sh:/docker-entrypoint-initdb.d/setup_dbs.sh
+    env_file:
+      - .env
+    networks:
+      - service_network
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER}'"]
+      start_period: 10s
+      interval: 15s
+      timeout: 5s
+      retries: 6
+    restart: always
+  pgadmin:
+    image: dpage/pgadmin4:9.5.0
+    container_name: rd_pgadmin
+    ports:
+      - "8888:80"
+    volumes:
+      - rd-pgadmin-volume:/var/lib/pgadmin
+    env_file:
+      - .env
+    networks:
+      - service_network
+    restart: always
 networks:
   service_network:
       name: jenkins_network
 volumes:
-  rd-registry-volume:
   rd-portainer-volume:
   rd-prometheus-volume:
-  rd-postgres-volume:
   rd-vikunja-volume:
-  rd-mariadb-volume:
+  rd-postgres-volume:
+  rd-pgadmin-volume:
