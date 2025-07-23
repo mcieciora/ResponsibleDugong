@@ -4,6 +4,7 @@ pipeline {
     }
     parameters {
         string(name: "AGENT_NAME", defaultValue: "built-in", description: "Node name or label.")
+        string(name: "PERMANENT_AGENT", defaultValue: false, description: "Check for permanent agent (should be already created via UI)."
         string(name: "TOKEN", defaultValue: "", description: "Provide CRUMB token.")
     }
     environment {
@@ -23,7 +24,7 @@ pipeline {
         stage ("Generate ssh keys") {
             steps {
                 script {
-                    println("Keys will be generated in ${env.SSH_PATH}")
+                    echo "Keys will be generated in ${env.SSH_PATH}"
                     sh "mkdir -p ${env.SSH_PATH}"
                     sh "ssh-keygen -t ed25519 -N '' -f ${env.SSH_PATH}/id_ed25519"
                 }
