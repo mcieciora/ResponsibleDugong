@@ -43,6 +43,9 @@ This animal was chosen as mascot for this project to raise awareness, that there
 
 <i>source:</i> [Dugong - Wikipedia](https://en.wikipedia.org/wiki/Dugong)
 
+<h3>Discontinuation note</h3>
+Development of this project has ended, and no further updates are planned.
+
 <h2>Introduction</h2>
 
 CarelessVaquita's main pipeline uses git checkout stage and tag creation commands. 
